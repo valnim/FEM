@@ -53,4 +53,4 @@ Flächeninhalt des Elements: 7.5
 
 Excercise 6:
 a) Symmetrie überprüft mit test_material()
-b)
+b) & c) Siehe test_stiffnes()
