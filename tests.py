@@ -41,10 +41,11 @@ def tests():
     #    test_new_implementation()
     #test_plateQuads()
     #test_numint_2d()
-    test_quad_shape_interpolation()
+    #test_quad_shape_interpolation()
     #test_type()
     #test_jacobian()
-    test_material()
+    #test_material()
+    test_stiffness()
 
 
 def test_plateQuads():
@@ -312,14 +313,64 @@ def test_material():
             for k in range(3):
                 for l in range(3):
                     if C[i, j, k, l] != C[j, i, k, l]:
-                        print(f"minor symmetry broken for i={i}, j={j}")
+                        print(f"minor symmetry broken for i={i}, j={j}, k={k}, l={l}")
                         broken = True
                     if C[i, j, k, l] != C[i, j, l, k]:
-                        print(f"minor symmetry broken for k={k}, l={k}")
+                        print(f"minor symmetry broken for i={i}, j={j}, k={k}, l={l}")
+                        broken = True
+                    if C[i, j, k, l] != C[k, l, i, j]:
+                        print(f"minor symmetry broken for i={i}, j={j}, k={k}, l={l}")
                         broken = True
 
     if not broken:
         print("Major symmetry fulfilled.")
+
+
+def test_stiffness():
+    from soofea.analyzer.implementation import LinearElementImpl
+    from soofea.model.material import StVenantKirchhoffMaterial
+    from soofea.model.type import ElementType
+    from soofea.model.model import Model, Node, Element
+    import numpy as np
+
+    dimension = 2
+    my_model = Model(dimension)
+
+    # Create nodes and add them to model
+    node_number_list = [1, 2, 3, 4]
+    a = np.sqrt(3)
+    node_coord_list = np.array([[1, 2],
+                                [4, 1],
+                                [4, 5],
+                                [1, 3]])
+
+    for node_number, node_coord in zip(node_number_list, node_coord_list):
+        my_model.addNode(Node(node_number, node_coord))
+
+    # Create element and add it to model
+    element_number = 1
+    element_node_numbers = [1, 2, 3, 4]
+    element = Element(element_number, element_node_numbers)
+    my_model.addElement(element)
+
+    my_model.addType(ElementType(1, 1, 'quad', [2, 2]))
+    my_model.getType(1).height = 1.0
+    my_model.getType(1).implementation = LinearElementImpl()
+
+    #    model.addType(EdgeType(2,1, [3]))
+    #    model.getType(2).height = 1.0;
+    #    model.getType(2).implementation = None
+
+    my_model.addMaterial(StVenantKirchhoffMaterial(1, 2.1e5, 0.3))
+
+
+    #material = StVenantKirchhoffMaterial(210000, 0.3, 'plane_stress')
+    my_model.addMaterial(StVenantKirchhoffMaterial(1, 2.1e5, 0.3))
+    A = my_model.type.implementation.calcStiffness(my_model)
+    print(A)
+    print()
+
+
 
 
 # def test_implementation():
