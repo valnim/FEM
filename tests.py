@@ -35,13 +35,16 @@ def tests():
     #    test_input_corner()
     #    test_input_circle()
     #    test_linear_shape()
-    #    test_quad_shape_interpolation()
     #    test_numerical_integration()
-    #    test_numint_2d()
-    #    test_material()
+    #
     #    test_implementation()
     #    test_new_implementation()
-    test_plateQuads()
+    #test_plateQuads()
+    #test_numint_2d()
+    test_quad_shape_interpolation()
+    #test_type()
+    #test_jacobian()
+    test_material()
 
 
 def test_plateQuads():
@@ -56,9 +59,11 @@ def test_plateQuads():
     model, analysis = plateQuads.read()
 
     print('Node Nr. 89: ' + str(model._node_dict[89].coordinates) + '\n')
-    print('Element Nr. 23: ' + str(model._edge_dict[23].node_number_list) + '\n')
-    print('Node Nr. 24: ' + str(model._node_dict[24].coordinates) + '\n')
-    print('Node Nr. 25: ' + str(model._node_dict[25].coordinates) + '\n')
+    print('Element Nr. 23: ' + str(model._element_dict[63].node_number_list) + '\n')
+    print('Node Nr. 51: ' + str(model._node_dict[51].coordinates) + '\n')
+    print('Node Nr. 60: ' + str(model._node_dict[60].coordinates) + '\n')
+    print('Node Nr. 61: ' + str(model._node_dict[61].coordinates) + '\n')
+    print('Node Nr. 52: ' + str(model._node_dict[52].coordinates) + '\n')
     print('Boundary Nr. 3: ' + str(len(model._boundary_dict[3].component_list)) + '\n')
     print('wait')
 
@@ -175,14 +180,18 @@ def test_quad_shape_interpolation():
     func_hat = np.array([func(-1, -1), func(1, -1), func(1, 1), func(-1, 1)])
     shape = soofea.model.shape.QuadShape(1)
 
-    position = [0.5, 0.5]
-    N = shape.getArray(position)
-    f = func(position[0], position[1])
+    position = [0.75, 0.15]
+    position_one_node = [1, 1]
+    N = shape.getArray(position_one_node)
+    der = shape.getDerivativeArray(position)
+    f = func(position[0], position[0])
     f_inter = func_hat @ N
 
-    print(f"Exakter Funktionswert: {f}")
-    print(f"Interpolierter Funktionswert: {f_inter}")
 
+    print(f"Exakter Funktionswert an anderen Nodes Coordinaten: {N}")
+    #print(f"Interpolierter Funktionswert: {f_inter}")
+    print(f"Derrivative: {der[2,1]}")
+    print('Fertig')
 
 def test_numerical_integration():
     import soofea.numeric.num_int
@@ -207,9 +216,9 @@ def test_numint_2d():
     print(integration_points)
 
     for ip in integration_points:
-        print(ip.coordinates)
+        print(ip.natural_coordinates)
         print(ip.weight)
-        print()
+    print()
 
 
 def test_type():
@@ -226,10 +235,10 @@ def test_type():
     # Create nodes and add them to model
     node_number_list = [1, 2, 3, 4]
     a = np.sqrt(3)
-    node_coord_list = np.array([[-a, -a],
-                                [a, -a],
-                                [a, a],
-                                [-a, a]])
+    node_coord_list = np.array([[1, 2],
+                                [4, 1],
+                                [4, 5],
+                                [1, 3]])
     for node_number, node_coord in zip(node_number_list, node_coord_list):
         my_model.addNode(Node(node_number, node_coord))
 
@@ -293,16 +302,21 @@ def test_material():
     nu = 0.3
     dim = 3
 
-    material = StVenantKirchhoffMaterial(number, E_mod, nu)
+    material = StVenantKirchhoffMaterial(number, E_mod, nu, 'plane_strain')
     C = material.getElasticityMatrix(dim)
 
     broken = False
     # Überprüfen Sie hier die 3 Symmetrien des Elastizitätstensors
-    for i in range(6):
-        for j in range(6):
-            if C[i, j] != C[j, i]:
-                print(f"minor symmetry broken for i={i}, j={j}")
-                broken = True
+    for i in range(3):
+        for j in range(3):
+            for k in range(3):
+                for l in range(3):
+                    if C[i, j, k, l] != C[j, i, k, l]:
+                        print(f"minor symmetry broken for i={i}, j={j}")
+                        broken = True
+                    if C[i, j, k, l] != C[i, j, l, k]:
+                        print(f"minor symmetry broken for k={k}, l={k}")
+                        broken = True
 
     if not broken:
         print("Major symmetry fulfilled.")
