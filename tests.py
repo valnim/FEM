@@ -45,7 +45,9 @@ def tests():
     #test_type()
     #test_jacobian()
     #test_material()
-    test_stiffness()
+    #test_stiffness()
+    #testDOF()
+    testAnalsysis()
 
 
 def test_plateQuads():
@@ -125,22 +127,39 @@ def test_model():
     print(my_model)
 
 
-def test_input_plate():
+def testDOF():
     import os, sys
 
-    ex_path = str(os.path.join(os.path.abspath(sys.path[0]), "examples/plate2d"))
+    ex_path = str(os.path.join(os.path.abspath(sys.path[0]), "examples/plateDOF"))
     if ex_path not in sys.path:
         sys.path.append(ex_path)
 
-    import plate2d
+    import plateDOF
 
-    model, analysis = plate2d.read()
+    model, analysis = plateDOF.read()
 
     for node in model._node_dict.values():
         print(f"Node {node.number:3}: {node.coordinates}")
 
     analysis.run()
+    print()
 
+def testAnalsysis():
+    import os, sys
+
+    ex_path = str(os.path.join(os.path.abspath(sys.path[0]), "examples/plateAnalysis"))
+    if ex_path not in sys.path:
+        sys.path.append(ex_path)
+
+    import plateAnalysis
+
+    model, analysis = plateAnalysis.read()
+
+    for node in model._node_dict.values():
+        print(f"Node {node.number:3}: {node.coordinates}")
+
+    analysis.run()
+    print()
 
 def test_input_corner():
     import os, sys
@@ -157,6 +176,7 @@ def test_input_corner():
         print(f"Node {node.number:3}: {node.coordinates}")
 
     analysis.run()
+    print()
 
 
 def test_input_circle():
