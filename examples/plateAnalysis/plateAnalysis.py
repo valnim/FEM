@@ -8,7 +8,7 @@ from soofea.analyzer.implementation import LinearElementImpl, FaceImpl
 from soofea.analyzer.analysis import LinearAnalysis
 from soofea.model.bc_handler import BCHandler
 
-displacement = 1.0e-3
+displacement = 0.1
 
 
 class MyBCHandler(BCHandler):
@@ -28,7 +28,7 @@ class MyBCHandler(BCHandler):
         for node in self._model.getBoundary(1).node_list:
             node.setBCDOF(x=0.0, y=0.0)
         for node in self._model.getBoundary(3).node_list:
-            node.setBCDOF(x=displacement, y=displacement)
+            node.setBCDOF(x=0, y=displacement)
 
 
 def read():
@@ -52,7 +52,7 @@ def read():
     #    model.getType(2).height = 1.0;
     #    model.getType(2).implementation = None
 
-    model.addMaterial(StVenantKirchhoffMaterial(1, 2.1e5, 0.3))
+    model.addMaterial(StVenantKirchhoffMaterial(1, 2.1e5, 0.3, 'plane_stress'))
 
     input_handler.readMesh(model)
 

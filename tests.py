@@ -146,6 +146,7 @@ def testDOF():
 
 def testAnalsysis():
     import os, sys
+    from soofea.io.output_handler import VTKOutputHandler
 
     ex_path = str(os.path.join(os.path.abspath(sys.path[0]), "examples/plateAnalysis"))
     if ex_path not in sys.path:
@@ -158,7 +159,13 @@ def testAnalsysis():
     for node in model._node_dict.values():
         print(f"Node {node.number:3}: {node.coordinates}")
 
-    analysis.run()
+
+
+    output_file_name = 'plateAnalysis.vtk'
+    force_overwrite = True
+    output_handler = VTKOutputHandler(output_file_name, model.dimension, force_overwrite=force_overwrite)
+    analysis.run(output_handler)
+
     print()
 
 def test_input_corner():
