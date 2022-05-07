@@ -45,9 +45,10 @@ def tests():
     #test_type()
     #test_jacobian()
     #test_material()
+    test_stiffness_b()
     #test_stiffness()
     #testDOF()
-    testAnalsysis()
+    #testAnalsysis()
 
 
 def test_plateQuads():
@@ -239,14 +240,17 @@ def test_numerical_integration():
 def test_numint_2d():
     import soofea.numeric.num_int
 
-    integration_points = soofea.numeric.num_int.getIntPoints('quad', [2, 2])
+    integration_points = soofea.numeric.num_int.getIntPoints('quad', [3, 3])
 
     print(integration_points)
 
+    A = 0
     for ip in integration_points:
         print(ip.natural_coordinates)
         print(ip.weight)
-    print()
+        A += ip.weight
+    print(A)
+    print('Fertig')
 
 
 def test_type():
@@ -364,6 +368,62 @@ def test_stiffness():
     element.material = StVenantKirchhoffMaterial(1, 2.1e5, 0.3)
     impl = LinearElementImpl()
     A = impl.calcStiffness(element)
+
+    print(A)
+    print()
+
+def test_stiffness_b():
+    from soofea.model.model import Element
+    from soofea.model.material import StVenantKirchhoffMaterial
+    from soofea.analyzer.jacobian import ElementJacobian
+    from soofea.numeric.num_int import methodIntegrate
+
+
+    def fun(element: Element, ip, parameters=None):
+        import numpy as np
+
+        E_mod = 210000
+        nu = 0.3
+
+        dimension = element.node_list[0].getDimension()
+        number_of_nodes = element.getNumberOfNodes()
+        dofs_per_element = dimension * number_of_nodes
+
+        dN = element.type.shape.getDerivativeArray(ip.getNaturalCoordinates())
+        jacobian = ElementJacobian(element, ip)
+        J = jacobian.getInv()
+        J_det = jacobian.getDet()
+
+        lam = nu * E_mod / ((1 + nu) * (1 - 2 * nu))
+        mu = E_mod / (2 * (1 + nu))
+
+        delta = np.identity(dimension)
+
+        C = np.zeros([dimension, dimension, dimension, dimension])
+        for i in range(dimension):
+            for j in range(dimension):
+                for k in range(dimension):
+                    for l in range(dimension):
+                        C[i, j, k, l] = lam * delta[i, j] * delta[k, l] + mu * (
+                                delta[i, k] * delta[j, l] + delta[j, k] * delta[i, l])
+
+        A = np.zeros([dimension, number_of_nodes, dimension, number_of_nodes])
+        for i in range(dimension):
+            for j in range(number_of_nodes):
+                for k in range(dimension):
+                    for l in range(number_of_nodes):
+                        for m in range(dimension):
+                            for n in range(dimension):
+                                for o in range(dimension):
+                                    for p in range(dimension):
+                                        A[i, j, k, l] += C[i, m, k, n] * dN[l, o] * J[o, n] * dN[j, p] * J[
+                                            p, m] * J_det
+        return np.reshape(A, (dofs_per_element, dofs_per_element), order='F')
+
+    element = test_type()
+    element.material = StVenantKirchhoffMaterial(1, 2.1e5, 0.3)
+    A = methodIntegrate(fun, element, element.int_points)
+
     print(A)
     print()
 

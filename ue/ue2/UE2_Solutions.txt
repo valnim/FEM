@@ -17,14 +17,29 @@ b) Derivative ∂N3/∂η 0.4375
 
 Excercise 3:
 Integration Points:
-[-0.5773502691896257, -0.5773502691896257]
-1.0
-[-0.5773502691896257, 0.5773502691896257]
-1.0
-[0.5773502691896257, -0.5773502691896257]
-1.0
-[0.5773502691896257, 0.5773502691896257]
-1.0
+[-0.7745966692414834, -0.7745966692414834]
+0.3086419753086421
+[-0.7745966692414834, 0.0]
+0.49382716049382697
+[-0.7745966692414834, 0.7745966692414834]
+0.3086419753086421
+[0.0, -0.7745966692414834]
+0.49382716049382697
+[0.0, 0.0]
+0.7901234567901224
+[0.0, 0.7745966692414834]
+0.49382716049382697
+[0.7745966692414834, -0.7745966692414834]
+0.3086419753086421
+[0.7745966692414834, 0.0]
+0.49382716049382697
+[0.7745966692414834, 0.7745966692414834]
+0.3086419753086421
+
+Flächeninhalt: 3.9999999999999987
+Bei der numerischen Integration wird immer Summe aller funktionswerte * gewichte gerechnet.
+Der Funktionswert bei der Berechnung der Fläche ist immer 1 (Integral 1 dx dy).
+Dadurch bleibt nur die Summe der Gewichte übrig.
 Siehe FEM\ue\ue2 für Bild
 
 Excercise 4:
@@ -53,4 +68,11 @@ Flächeninhalt des Elements: 7.5
 
 Excercise 6:
 a) Symmetrie überprüft mit test_material()
-b) & c) Siehe test_stiffnes()
+b) Siehe test_stiffnes_b()
+c) Siehe test_stiffnes()
+
+Excercise 7:
+Implemmentiert in plateDOF.py in \examples\plateDOF
+
+Excercise 8:
+Implemmentiert in plateAnalysis.py in \examples\plateAnalysis
