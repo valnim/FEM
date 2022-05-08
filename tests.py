@@ -39,7 +39,7 @@ def tests():
     #
     #    test_implementation()
     #    test_new_implementation()
-    #test_plateQuads()
+    test_plateQuads()
     #test_numint_2d()
     #test_quad_shape_interpolation()
     #test_type()
