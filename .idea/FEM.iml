@@ -11,6 +11,9 @@
       <sourceFolder url="file://$MODULE_DIR$/examples/plate2d" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/examples/plateTension" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/examples/plateAnalysis" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/examples/plateDOF" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/examples/plateQuads" isTestSource="false" />
     </content>
     <orderEntry type="jdk" jdkName="Python 3.9 (fem)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
