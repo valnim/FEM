@@ -1,0 +1,78 @@
+Excercise 1:
+Node Nr. 89: [5.99999999999635, 3.999999999994609]
+Element Nr. 23: [51, 60, 61, 52]
+Node Nr. 51: [1.999999999997459, 1.999999999999364]
+Node Nr. 60: [2.999999999995121, 1.999999999999046]
+Node Nr. 61: [2.999999999995732, 2.99999999999817]
+Node Nr. 52: [1.999999999997777, 2.999999999998778]
+Boundary Nr. 3: 10
+
+Excercise 2:
+a)Exakter Funktionswert an anderen Nodes Coordinaten:
+[[ 0.]
+ [-0.]
+ [ 1.]
+ [-0.]]
+b) Derivative ∂N3/∂η 0.4375
+
+Excercise 3:
+Integration Points:
+[-0.7745966692414834, -0.7745966692414834]
+0.3086419753086421
+[-0.7745966692414834, 0.0]
+0.49382716049382697
+[-0.7745966692414834, 0.7745966692414834]
+0.3086419753086421
+[0.0, -0.7745966692414834]
+0.49382716049382697
+[0.0, 0.0]
+0.7901234567901224
+[0.0, 0.7745966692414834]
+0.49382716049382697
+[0.7745966692414834, -0.7745966692414834]
+0.3086419753086421
+[0.7745966692414834, 0.0]
+0.49382716049382697
+[0.7745966692414834, 0.7745966692414834]
+0.3086419753086421
+
+Flächeninhalt: 3.9999999999999987
+Bei der numerischen Integration wird immer Summe aller funktionswerte * gewichte gerechnet.
+Der Funktionswert bei der Berechnung der Fläche ist immer 1 (Integral 1 dx dy).
+Dadurch bleibt nur die Summe der Gewichte übrig.
+Siehe FEM\ue\ue2 für Bild
+
+Excercise 4:
+Element coordinates:
+[[1 4 4 1]
+ [2 1 5 3]]
+
+Integration point natural coordinates:
+[-0.5773502691896257, -0.5773502691896257]
+[-0.5773502691896257, 0.5773502691896257]
+[0.5773502691896257, -0.5773502691896257]
+[0.5773502691896257, 0.5773502691896257]
+
+Integration point coordinates:
+[[1.6339746]
+ [2.1339746]]
+[[1.6339746 ]
+ [3.07735027]]
+[[3.3660254 ]
+ [1.92264973]]
+[[3.3660254]
+ [3.8660254]]
+
+Excercise 5:
+Flächeninhalt des Elements: 7.5
+
+Excercise 6:
+a) Symmetrie überprüft mit test_material()
+b) Siehe test_stiffnes_b()
+c) Siehe test_stiffnes()
+
+Excercise 7:
+Implemmentiert in plateDOF.py in \examples\plateDOF
+
+Excercise 8:
+Implemmentiert in plateAnalysis.py in \examples\plateAnalysis

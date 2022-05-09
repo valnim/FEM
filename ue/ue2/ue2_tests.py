@@ -29,26 +29,16 @@ if src_path not in sys.path:
 
 def tests():
     # Entfernen Sie das Kommentarzeichen vor dem jeweiligen unit-test.
-    #    test_node()
-    #    test_model()
-    # test_input_plate()
-    #    test_input_corner()
-    #    test_input_circle()
-    #    test_linear_shape()
-    #    test_numerical_integration()
-    #
-    #    test_implementation()
-    #    test_new_implementation()
     test_plateQuads()
-    #test_numint_2d()
-    #test_quad_shape_interpolation()
-    #test_type()
-    #test_jacobian()
-    #test_material()
+    test_numint_2d()
+    test_quad_shape_interpolation()
+    test_type()
+    test_jacobian()
+    test_material()
     test_stiffness_b()
-    #test_stiffness()
-    #testDOF()
-    #testAnalsysis()
+    test_stiffness()
+    testDOF()
+    testAnalsysis()
 
 
 def test_plateQuads():
