@@ -1,12 +1,14 @@
 • Model:
-Model inherits of Nodecontainer and consists of Elements, Faces, Boundaries, Nodes, Edges, a Material and a Types
+Model inherits of Nodecontainer and consists of Elements, Faces, Boundaries, Nodes, Edges, a Material and Types.
 
 • Shape:
 Defines the standard Elements used in the calculation in FEM. (Real Elements are Transformed to standard Elements)
 
 • RealIntegrationPoint:
+Integration Point class for the real element.
 
 • NaturalIntegrationPoint:
+Integration Points for the standard elements.
 
 • Type:
 Defines the following propoerties of an Nodecontainer:
@@ -16,9 +18,9 @@ Defines the following propoerties of an Nodecontainer:
 - Number of Int Points
 
 • Jacobian:
-Contains the methods for calculation of the jacobina,
+Contains the methods for calculation of the jacobian,
 inversejacobian and determinantes of the jacobian of an element,
-used in the fem calculation
+used in the fem calculation.
 
 • Implementation:
 Contains the methods for calculation of the stiffness matrix,
