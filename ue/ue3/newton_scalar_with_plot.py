@@ -13,12 +13,32 @@ n_equations = 1
 # In the scalar case, the function and its derivative can be implemented
 # directly via function handles. For nonlinear equation systems, the
 # functions are defined in files on their own.
-f = lambda x: x - np.exp(-x)
-df = lambda x: 1 + np.exp(-x)
+
+bsp = 1
+
+if bsp == 0:
+    # x - e^-x
+    f = lambda x: x - np.exp(-x)
+    df = lambda x: 1 + np.exp(-x)
+    x0 = -3
+    x = np.linspace(-3.5, 1.5, 1001)
+elif bsp == 1:
+    # atan(x)
+    f = lambda x: np.arctan(x)
+    df = lambda x: 1 / (1 + x**2)
+    x0 = np.pi/3  # Good initial guess = pi/3 (converges), bad guess = pi/2 (does not converge, because of instability, overshoots)
+    x = np.linspace(-4, 4, 1001)
+elif bsp == 2:
+    # 1/2*x^3-3/2*x^2-1
+    f = lambda x: 0.5*x**3-1.5*x**2-1
+    df = lambda x: 3/2*x**2-3*x
+    x0 = 4 # Good Initial Guess = 4 (converges), Bad Initial Guess = 1 (gets stuck in local maximum)
+    x = np.linspace(-1.5, 4.5, 1001)
+
 
 # Setting the initial guess, the maximum number of iterations and the
 # convergence criterion (same for increment and residuum)
-x0 = -3
+
 max_iterations = 15
 convergence_criterion = 1e-12
 
@@ -27,9 +47,6 @@ x_arr = np.zeros((n_equations, max_iterations + 1))
 x_arr[:, 0] = x0
 
 # % x- and y values for the plot are calculated
-# x = linspace(-3.5,1.5,1001);
-# y = arrayfun(f,x);
-x = np.linspace(-3.5, 1.5, 1001)
 y = np.array([f(i) for i in x])
 
 # x axis and initial guess are plotted.
