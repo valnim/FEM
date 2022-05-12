@@ -256,7 +256,7 @@ def test_type():
 
     # Create nodes and add them to model
     node_number_list = [1, 2, 3, 4]
-    a = np.sqrt(3)
+
     node_coord_list = np.array([[1, 2],
                                 [4, 1],
                                 [4, 5],
