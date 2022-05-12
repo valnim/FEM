@@ -7,8 +7,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-# Set the number of equations to solve
-n_equations = 1
 
 # In the scalar case, the function and its derivative can be implemented
 # directly via function handles. For nonlinear equation systems, the
@@ -17,18 +15,21 @@ n_equations = 1
 bsp = 1
 
 if bsp == 0:
+    n_equations = 1
     # x - e^-x
     f = lambda x: x - np.exp(-x)
     df = lambda x: 1 + np.exp(-x)
     x0 = -3
     x = np.linspace(-3.5, 1.5, 1001)
 elif bsp == 1:
+    n_equations = 1
     # atan(x)
     f = lambda x: np.arctan(x)
     df = lambda x: 1 / (1 + x**2)
     x0 = np.pi/3  # Good initial guess = pi/3 (converges), bad guess = pi/2 (does not converge, because of instability, overshoots)
     x = np.linspace(-4, 4, 1001)
 elif bsp == 2:
+    n_equations = 1
     # 1/2*x^3-3/2*x^2-1
     f = lambda x: 0.5*x**3-1.5*x**2-1
     df = lambda x: 3/2*x**2-3*x
@@ -56,11 +57,6 @@ plt.plot([x[0], x[-1]], [0, 0], 'k-')
 plt.plot([x0, x0], [0, f(x0)], 'r')
 plt.legend(['f(x)'])
 
-# In the following arrays, residuum and increment of each iteration step
-# are stored.
-convergence_residuum = np.ones((1, max_iterations + 1))
-convergence_dx = np.ones((1, max_iterations + 1))
-
 for k in range(max_iterations):
     # wait for key press
     #input("Press Enter to continue...")
@@ -78,3 +74,4 @@ for k in range(max_iterations):
     plt.plot(x_kp1[0, 0], f(x_kp1)[0, 0], 'r*')
 
 plt.show()
+print()
