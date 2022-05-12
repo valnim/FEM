@@ -62,11 +62,11 @@ for k in range(max_iterations):
     #input("Press Enter to continue...")
     # Implementation of the Newton Raphson method
     x_k = x_arr[:, k]
-    delta_x = -np.linalg.inv(np.reshape(df(x_k), (n_equations, n_equations))) * np.reshape(f(x_k), (n_equations, n_equations))
-    x_kp1 = x_k + delta_x
+    delta_x = np.matmul(-np.linalg.inv(np.reshape(df(x_k), (n_equations, n_equations))), np.reshape(f(x_k), (n_equations, 1)))
+    x_kp1 = np.reshape(x_k, (n_equations, 1)) + delta_x
 
     # The calculated value is stored
-    x_arr[:, k + 1] = x_kp1
+    x_arr[:, k + 1] = x_kp1[:, 0]
 
     # The calculated value is plotted
     plt.plot([x_k[0], x_kp1[0, 0]], [f(x_k)[0], 0], 'grey')

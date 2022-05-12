@@ -6,11 +6,8 @@
 # #-------------------------------------------------------------------------#
 import numpy as np
 
-
-# In the scalar case, the function and its derivative can be implemented
-# directly via function handles. For nonlinear equation systems, the
-# functions are defined in files on their own.
-bsp = 1
+# The different Examples are defined in the following functions
+bsp = 3
 
 if bsp == 0:
     n_equations = 1
@@ -35,15 +32,8 @@ elif bsp == 2:
 
 elif bsp == 3:
     n_equations = 4
-    # Excercise 2
+    # Exercise 2
 
-    # def f(x: np.array([4,1])):
-    #     y = np.zeros([4, 1])
-    #     y[0, 0] = x[0, 0] + x[1, 0] - 2
-    #     y[1, 0] = x[0, 0] * x[2, 0] + x[1, 0] * x[3, 0]
-    #     y[2, 0] = x[0, 0] * x[2, 0]**2 + x[1, 0] * x[3, 0]**2 - 2/3
-    #     y[3, 0] = x[0, 0] * x[2, 0]**3 + x[1, 0] * x[3, 0]**3
-    #     return y
     def f(x: np.array([4, ])):
         y = np.zeros([4, ])
         y[0] = x[0] + x[1] - 2
@@ -70,12 +60,17 @@ elif bsp == 3:
         y[3, 3] = x[1] * x[3]**2 * 3
         return y
 
-    x0 = np.array([1, 3, 4, 5])
+    x0 = np.array([2, 3, 1, -1])
+    # 1, 3, 4, 5 needs 158 iterations to converge
+    # 2 ,3 1, -1 needs 6 iterations to converge
+    # 2, 2, 2, 2 does not converge because of singularity in the calculation of the inverse
+
+
 
 
 # Setting the initial guess, the maximum number of iterations and the
 # convergence criterion (same for increment and residuum)
-max_iterations = 15
+max_iterations = 300
 convergence_criterion = 1e-12
 
 # In the following array, the x-value of each iteration step is stored.
@@ -84,8 +79,8 @@ x_arr[:, 0] = x0
 
 # In the following arrays, residuum and increment of each iteration step
 # are stored.
-convergence_residuum = np.ones((n_equations, max_iterations + 1))
-convergence_dx = np.ones((n_equations, max_iterations + 1))
+convergence_residuum = np.ones((1, max_iterations + 1))
+convergence_dx = np.ones((1, max_iterations + 1))
 
 for k in range(max_iterations):
     # Implementation of the Newton Raphson method
@@ -99,11 +94,10 @@ for k in range(max_iterations):
     # Residuum and increment are stored for the convergence check. The
     # values are normalized with respect to their initial values.
     convergence_residuum[:, k + 1] = np.linalg.norm(f(x_kp1))/np.linalg.norm(f(x0))
-    #print(convergence_residuum[:, k + 1])
     convergence_dx[:, k + 1] = np.linalg.norm(delta_x)/np.linalg.norm(x_arr[:, 1]-x0)
     
     # Convergence is checked
-    if np.linalg.norm(convergence_residuum[:, k + 1]) < convergence_criterion and np.linalg.norm(convergence_dx[:, k + 1]) < convergence_criterion:
+    if convergence_residuum[:, k + 1] < convergence_criterion and convergence_dx[:, k + 1] < convergence_criterion:
         # If both convergence criteria are fulfilled, we can stop the
         # iteration.
         print('Newton method converged at step ', k)
