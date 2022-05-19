@@ -47,8 +47,9 @@ def tests():
     #test_material()
     #test_stiffness_b()
     #test_stiffness()
-    testDOF()
+    #testDOF()
     #testAnalsysis()
+    test_material()
 
 
 def test_plateQuads():

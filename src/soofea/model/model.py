@@ -60,6 +60,7 @@ class Node(NumberedObject):
     def __init__(self, number, coordinates):
         NumberedObject.__init__(self, number)
         self.coordinates = coordinates
+        self.spatial_coordinates = coordinates
         self.dof = DisplacementDOF(len(self.coordinates))
         '''The degrees of freedom: For classical structural analysis this
             would be of type :py:class:`soofea.model.dof.DisplacementDOF`.
@@ -182,11 +183,15 @@ class NodeContainer(NumberedObject):
     def getNumberOfNodes(self):
         return len(self.node_list)
 
-    def getCoordinateArray(self, ):
+    def getCoordinateArray(self, configuration='undeformed'):
         N = self.getNumberOfNodes()
         columns = [None] * N
-        for node_number in range(N):
-            columns[node_number] = self.node_list[node_number].coordinates
+        if(configuration == 'undeformed'):
+            for node_number in range(N):
+                columns[node_number] = self.node_list[node_number].coordinates
+        elif(configuration == 'spatial'):
+            for node_number in range(N):
+                columns[node_number] = self.node_list[node_number].spatial_coordinates
         return np.array(columns).T
 
 

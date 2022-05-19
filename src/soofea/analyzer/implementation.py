@@ -154,15 +154,47 @@ class NonlinearElementImpl(ElementImpl):
 
 
     def _internalForcesIntegrator(self, int_point, element):
-        pass
+        dim = element.node_list[0].getDimension()
+        n_nodes = len(element.node_number_list)
+        n_dofs = dim * n_nodes
+
+        [F, E, dN, J, J_det_inv] = self.calcKinematics(element, int_point)
+
+        S = element.material.getSecondPK(E)
+
+        F_int = np.zeros((dim, n_nodes))
+        for i in range(dim):
+            for j in range(n_nodes):
+                for k in range(dim):
+                    for l in range(n_nodes):
+                        for m in range(dim):
+                            F_int[i, j] =  F[i, k] * S[k, l] * dN[j, m] * J[m, l] * J_det_inv
+
+        return np.reshape(F_int, (n_dofs, 1), 'F')
+
 
     def calcKinematics(self, element, int_point):
-        pass
+
+        jac_undeformed = ElementJacobian(element, int_point, configuration='undeformed')
+
+        jac_deformed = ElementJacobian(element, int_point, configuration='spatial')
+
+        I = np.identity(len(jac_undeformed.get()))
+
+        F = np.linalg.inv(jac_deformed.get()) @ jac_undeformed.getDet() #TODO überprüfen ob matmul
+
+        E = 0.5 * (np.transpose(F)*F-I)
+
+        dN = element.type.shape.getDerivativeArray(int_point.getNaturalCoordinates())
+        J = jac_undeformed.get()
+        J_det_inv = jac_undeformed.getDet()
+
+        return F, E, dN, J, J_det_inv
 
 
     def calcVolumeLoad(self, element):
-        F = methodIntegrate(self.volumeLoadIntegrator, element, element.int_points)
-        return F
+        F_volume = methodIntegrate(self.volumeLoadIntegrator, element, element.int_points)
+        return F_volume
 
     def volumeLoadIntegrator(self, element, int_point, parameters=None):
         dim = element.node_list[0].getDimension()

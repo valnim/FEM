@@ -10,20 +10,21 @@ import numpy.linalg as npl
 
 
 class Jacobian(object):
-    def __init__(self, node_container, int_point):
+    def __init__(self, node_container, int_point, configuration='undeformed'):
         self._node_container = node_container
         self._int_point = int_point
+        self._configuration = configuration
         int_point.dH = node_container.type.shape.getDerivativeArray(int_point.getNaturalCoordinates())
         self._calc()
 
     def _calc(self):
-        coordinates = self._node_container.getCoordinateArray()
+        coordinates = self._node_container.getCoordinateArray(self.configuration)
         self._J = np.dot(coordinates, self._int_point.dH)
 
 
 class ElementJacobian(Jacobian):
-    def __init__(self, element, int_point):
-        Jacobian.__init__(self, element, int_point)
+    def __init__(self, element, int_point, configuration='undeformed'):
+        Jacobian.__init__(self, element, int_point, configuration)
 
     def get(self):
         return self._J
