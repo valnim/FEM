@@ -42,8 +42,8 @@ classdef NonlinearElementImpl < nsAnalyzer.nsImplementation.ElementImpl
             % Kronecker-delta
             delta = eye(dimension);
 
-            % Implementation of the initial stress component of the
-            % stiffness matrix
+            # Implementation of the initial stress component of the
+            # stiffness matrix
             A_ISC = zeros(dimension,number_of_nodes,dimension,number_of_nodes);
             for i = 1:dimension
                 for j = 1:number_of_nodes
@@ -73,19 +73,19 @@ classdef NonlinearElementImpl < nsAnalyzer.nsImplementation.ElementImpl
             number_of_nodes = element.getNumberOfNodes();
             dofs_per_element = number_of_nodes * dimension;
 
-            % Calculate all relevant quantities.
-            %[F, E, dN, J, J_det_inv] =
+            #Calculate all relevant quantities.
+            #[F, E, dN, J, J_det_inv] =
 
-            % Calculate the material elasticity tensor
-            % CC = element.material.
+            # Calculate the material elasticity tensor
+            # CC = element.material.
 
-            % Implementation of the constitutive component of the stiffness
-            % matrix
-            % A_CC =
+            # Implementation of the constitutive component of the stiffness
+            #matrix
+            # A_CC =
 
-            % Reshaping the stiffness matrix from a 4th order matrix into a
-            % 2nd order matrix
-            % A_CC =
+            # Reshaping the stiffness matrix from a 4th order matrix into a
+            # 2nd order matrix
+            # A_CC =
         end
 
         function F_int = internalForcesIntegrator(int_point, element)

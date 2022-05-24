@@ -18,7 +18,7 @@ class Jacobian(object):
         self._calc()
 
     def _calc(self):
-        coordinates = self._node_container.getCoordinateArray(self.configuration)
+        coordinates = self._node_container.getCoordinateArray(self._configuration)
         self._J = np.dot(coordinates, self._int_point.dH)
 
 

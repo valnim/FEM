@@ -50,11 +50,11 @@ class LinearElementImpl(ElementImpl):
 
         return np.reshape(K_elem, (dofs_per_element, dofs_per_element), order='F')
 
-    def calcVolumeLoad(self, element):
+    def calcLoad(self, element):
         F = methodIntegrate(self.volumeLoadIntegrator, element, element.int_points)
         return F
 
-    def volumeLoadIntegrator(self, element, int_point, parameters=None):
+    def volumeLoadIntegrator(self, int_point, element, parameters=None):
         dim = element.node_list[0].getDimension()
         n_nodes = len(element.node_number_list)
         n_dofs = dim * n_nodes
@@ -116,8 +116,8 @@ class FaceImpl(object):
 class NonlinearElementImpl(ElementImpl):
     def calcStiffness(self, element):
         A_CC = methodIntegrate(NonlinearElementImpl._constitutiveComponentIntegrator,
-                              self, element.int_points, element)
-        A_ISC = methodIntegrate(NonlinearElementImpl._internalStressComponentIntegrator,
+                               self, element.int_points, element)
+        A_ISC = methodIntegrate(NonlinearElementImpl._initialStressComponentIntegrator,
                                 self, element.int_points, element)
         return A_CC + A_ISC
 
@@ -126,34 +126,61 @@ class NonlinearElementImpl(ElementImpl):
         n_nodes = len(element.node_number_list)
         dofs_per_element = dim * n_nodes
 
-        # dN = element.type.shape.getDerivativeArray(int_point.getNaturalCoordinates())
-        #
-        # jacobian = ElementJacobian(element, int_point)
-        # J = jacobian.getInv()
-        # J_det = jacobian.getDet()
-        #
-        # C = element.material.getElasticityMatrix(dim)
-        #
-        # K_elem = np.zeros([dim, n_nodes, dim, n_nodes])
-        # for i in range(dim):
-        #     for j in range(n_nodes):
-        #         for k in range(dim):
-        #             for l in range(n_nodes):
-        #                 for m in range(dim):
-        #                     for n in range(dim):
-        #                         for o in range(dim):
-        #                             for p in range(dim):
-        #                                 K_elem[i, j, k, l] += C[i, m, k, n] * dN[l, o] * J[o, n] * dN[j, p] * J[
-        #                                     p, m] * J_det
-        #
-        # return np.reshape(K_elem, (dofs_per_element, dofs_per_element), order='F')
-        pass
+        # Calculate all relevant quantities.
+        [F, E, dN, J, J_det_inv] = self.calcKinematics(element, int_point)
+
+        # Calculate the material elasticity tensor
+        CC = element.material.getElasticityMatrix(E)
+
+        # Implementation of the constitutive component of the stiffness matrix
+        A_CC = np.zeros((dim, n_nodes, dim, n_nodes))
+        for i in range(dim):
+            for j in range(n_nodes):
+                for k in range(dim):
+                    for l in range(n_nodes):
+                        for m in range(dim):
+                            for n in range(dim):
+                                for o in range(dim):
+                                    for p in range(dim):
+                                        for q in range(dim):
+                                            for r in range(dim):
+                                                A_CC[i, j, k, l] += CC[m, n, o, p] * F[i, m] * dN[l, q] * J[q, o] \
+                                                                   * F[k, p] * dN[j, r] * J[r, n] * J_det_inv
+
+        # Reshaping the stiffness matrix from a 4th order matrix into a 2nd order matrix
+        return np.reshape(A_CC, (dofs_per_element, dofs_per_element), 'F')
 
     def _initialStressComponentIntegrator(self, int_point, element):
-        pass
+        dim = self.getDimension(element)
+        n_nodes = len(element.node_number_list)
+        dofs_per_element = dim * n_nodes
+
+        # Calculate all relevant quantities.
+        [_, E, dN, J, J_det_inv] = self.calcKinematics(element, int_point)
+
+        # Calculation of PK2 tensor
+        S = element.material.getSecondPK(E)
+
+        # Kronecker-delta
+        delta = np.eye(dim)
+
+        # Implementation of the initial stress component of the stiffness matrix
+        A_ISC = np.zeros((dim, n_nodes, dim, n_nodes))
+        for i in range(dim):
+            for j in range(n_nodes):
+                for k in range(dim):
+                    for l in range(n_nodes):
+                        for m in range(dim):
+                            for n in range(dim):
+                                for o in range(dim):
+                                    for p in range(dim):
+                                        A_ISC[i, j, k, l] += delta[i, k] * dN[l, m] * J[m, n] * S[n, o] * dN[j, p]\
+                                                             * J[p, o] * J_det_inv
+        return np.reshape(A_ISC, (dofs_per_element, dofs_per_element), 'F')
 
 
-    def _internalForcesIntegrator(self, int_point, element):
+
+    def _internalForcesIntegrator(self, int_point, element, parameters=None):
         dim = element.node_list[0].getDimension()
         n_nodes = len(element.node_number_list)
         n_dofs = dim * n_nodes
@@ -166,9 +193,9 @@ class NonlinearElementImpl(ElementImpl):
         for i in range(dim):
             for j in range(n_nodes):
                 for k in range(dim):
-                    for l in range(n_nodes):
+                    for l in range(dim):
                         for m in range(dim):
-                            F_int[i, j] =  F[i, k] * S[k, l] * dN[j, m] * J[m, l] * J_det_inv
+                            F_int[i, j] += F[i, k] * S[k, l] * dN[j, m] * J[m, l] * J_det_inv
 
         return np.reshape(F_int, (n_dofs, 1), 'F')
 
@@ -181,7 +208,7 @@ class NonlinearElementImpl(ElementImpl):
 
         I = np.identity(len(jac_undeformed.get()))
 
-        F = np.linalg.inv(jac_deformed.get()) @ jac_undeformed.getDet() #TODO überprüfen ob matmul
+        F = np.linalg.inv(jac_deformed.get()) @ jac_undeformed.get() #TODO überprüfen ob matmul
 
         E = 0.5 * (np.transpose(F)*F-I)
 
@@ -192,11 +219,17 @@ class NonlinearElementImpl(ElementImpl):
         return F, E, dN, J, J_det_inv
 
 
-    def calcVolumeLoad(self, element):
-        F_volume = methodIntegrate(self.volumeLoadIntegrator, element, element.int_points)
-        return F_volume
+    def calcLoad(self, element):
+        # Volume Forces
+        #F_volume = methodIntegrate(NonlinearElementImpl.volumeLoadIntegrator, self, element.int_points, element)
 
-    def volumeLoadIntegrator(self, element, int_point, parameters=None):
+        # internal Forces
+        F_int = methodIntegrate(NonlinearElementImpl._internalForcesIntegrator, self, element.int_points, element)
+
+        F = -F_int #+ F_volume
+        return F
+
+    def volumeLoadIntegrator(self, int_point, element, parameters=None):
         dim = element.node_list[0].getDimension()
         n_nodes = len(element.node_number_list)
         n_dofs = dim * n_nodes
