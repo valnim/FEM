@@ -60,7 +60,7 @@ class Analysis:
                 F_surface_face = face.type.implementation.calcSurfaceLoad(face)
                 self.loadAssembler(face, F_surface_face, global_load)
         for element in self._model._element_dict.values():
-            F_volume = element.type.implementation.calcVolumeLoad(element)
+            F_volume = element.type.implementation.calcLoad(element)
             self.loadAssembler(element, F_volume, global_load)
 
 
