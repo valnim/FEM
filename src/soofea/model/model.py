@@ -47,6 +47,7 @@ class IntegrationPoint(object):
         return self.math_ip.natural_coordinates
 
 
+# noinspection PyRedundantParentheses
 class Node(NumberedObject):
     '''
     We defined the points, where the interpolation conditions are fulfilled,
@@ -114,6 +115,7 @@ class Node(NumberedObject):
             self.load.setValue(2, z)
 
 
+# noinspection PyRedundantParentheses
 class NodeContainer(NumberedObject):
     '''
     An :py:class:`soofea.model.model.Element`,
@@ -247,7 +249,7 @@ class Boundary(NodeContainer):
         and the :py:attr:`soofea.model.model.NodeContainer.node_list`.
 
         :param component: The component (:py:class:`soofea.model.model.Edge` - 2D, :py:class:`soofea.model.model.Face` - 3D)
-	to add to the boundary
+        to add to the boundary
         '''
         self.component_list.append(component)
         for node in component.node_list:
@@ -357,3 +359,14 @@ class Model:
         for element in self._element_dict.values():
             print_str += str(element)
         return print_str
+
+
+class TimeStamp:
+    # TIMESTAMP A simple class we will use for time stepping. Note that we
+    # only perform quasistatic computations
+
+    def __init__(self, index, time):
+        self.time = time
+        self.index = index
+
+

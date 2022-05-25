@@ -1,6 +1,6 @@
 classdef TimeStamp
-    %TIMESTAMP A simple class we will use for time stepping. Note that we
-    %only perform quasistatic computations
+    #TIMESTAMP A simple class we will use for time stepping. Note that we
+    #only perform quasistatic computations
     
     properties ( SetAccess = private )
         index

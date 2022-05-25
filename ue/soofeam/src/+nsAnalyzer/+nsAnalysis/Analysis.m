@@ -13,35 +13,35 @@ classdef Analysis < handle
     
     methods ( Access = protected )
         function [solution_vector, global_load] = solveFESystem(self)
-            % At the beginning, global stiffness matrix and global load
-            % vector are created empty.
+            # At the beginning, global stiffness matrix and global load
+            # vector are created empty.
             number_of_unknowns = self.model.getNumberOfUnknowns();
             
             global_load = zeros(number_of_unknowns, 1);
             global_stiffness = sparse(number_of_unknowns, number_of_unknowns);
             
-            % The element stiffness matrizes are calculated and the global
-            % stiffness matrix is assembled.
+            # The element stiffness matrizes are calculated and the global
+            # stiffness matrix is assembled.
             global_stiffness = self.calcGlobalStiffnessMatrix(global_stiffness);
             
-            % The element load vectors are calculated and the global load
-            % vector is assembled.
+            # The element load vectors are calculated and the global load
+            # vector is assembled.
             global_load = self.calcGlobalLoadVector(global_load);
             
-            % The Dirichlet boundary conditions are integrated into the
-            % linear equation system.
+            # The Dirichlet boundary conditions are integrated into the
+            # linear equation system.
             [global_stiffness, global_load] = self.integrateDirichletBC(global_stiffness, global_load);
             
-            % The Matlab operator '\' solves the linear equations system
-            % global_stiffness * solution_vector = global_load
-            %
-            % The solution_vector contains the nodal displacements for a
-            % linear analysis and the nodal displacement increments for a
-            % nonlinear analysis.
+            # The Matlab operator '' solves the linear equations system
+            # global_stiffness * solution_vector = global_load
+            #
+            # The solution_vector contains the nodal displacements for a
+            # linear analysis and the nodal displacement increments for a
+            # nonlinear analysis.
             solution_vector = global_stiffness\global_load;
             
-            % The solution vector is stored in the DOF objects of the
-            % model.
+            # The solution vector is stored in the DOF objects of the
+            # model.
             self.updateDOF(solution_vector);
         end
                 
@@ -49,12 +49,12 @@ classdef Analysis < handle
             for node = self.model.node_dict
                 for coord_index = 1:self.model.dimension
                     if node.dof.getConstraint(coord_index)
-                        % Row in the column solution vector
+                        # Row in the column solution vector
                         global_col_index = (node.number-1)*self.model.dimension + coord_index;
                         for row_counter=1:length(global_stiffness)
-                            % Check if the analysis is linear or nonlinear.
-                            % Use the displacement or the increment as
-                            % boundary condition respectively.
+                            # Check if the analysis is linear or nonlinear.
+                            # Use the displacement or the increment as
+                            # boundary condition respectively.
                             if isa(self,'nsAnalyzer.nsAnalysis.LinearAnalysis')
                                 bc_value = node.dof.getDisplacement(coord_index);
                             elseif isa (self,'nsAnalyzer.nsAnalysis.NonlinearAnalysis')
@@ -82,11 +82,11 @@ classdef Analysis < handle
     methods( Static, Access = protected )
         function global_stiffness = assembleStiffness(node_container, local_stiffness, global_stiffness)
             
-            % dofs_per_node is dimension of stiffness matrix divided by
-            % number of nodes per element. I have not figured out why, yet.
-            % Maybe number of entries means numbers of dofs per node, so 2
-            % for 2D and 3 for 3D original line: nr_of_entries =
-            % local_stiffness.shape(1)/node_container.type.shape.getNumberOfNodes;
+            # dofs_per_node is dimension of stiffness matrix divided by
+            # number of nodes per element. I have not figured out why, yet.
+            # Maybe number of entries means numbers of dofs per node, so 2
+            # for 2D and 3 for 3D original line: nr_of_entries =
+            # local_stiffness.shape(1)/node_container.type.shape.getNumberOfNodes;
             
             dofs_per_element = length(local_stiffness);
             
@@ -94,32 +94,32 @@ classdef Analysis < handle
             
             for local_row_index = 1:length(local_stiffness)
                 for local_col_index = 1:length(local_stiffness)
-                    % In the assembly process, the task is to find the
-                    % global indices of the global stiffness matrix which
-                    % belong to the local indices of the local indices of
-                    % the current element
+                    # In the assembly process, the task is to find the
+                    # global indices of the global stiffness matrix which
+                    # belong to the local indices of the local indices of
+                    # the current element
                     
-                    % There are dofs_per_node columns for each node.
-                    % example 2D: u1,v1,u2,v2,... -> indices 1 & 2 must be
-                    % mapped to 1 -> indices 3 & 4 must be mapped to 2,
-                    % etc. hence the ceil.
+                    # There are dofs_per_node columns for each node.
+                    # example 2D: u1,v1,u2,v2,... -> indices 1 & 2 must be
+                    # mapped to 1 -> indices 3 & 4 must be mapped to 2,
+                    # etc. hence the ceil.
                     local_node_index_row = ceil(local_row_index/dofs_per_node);
                     local_node_index_col = ceil(local_col_index/dofs_per_node);
                     
-                    % get the current nodes
+                    # get the current nodes
                     row_node = node_container.node_list(local_node_index_row);
                     col_node = node_container.node_list(local_node_index_col);
                     
-                    % get the global node number
+                    # get the global node number
                     global_node_index_row = row_node.number;
                     global_node_index_col = col_node.number;
                     
-                    % retrieve the position in the global stiffness matrix.
-                    % example 2D: node 8 with dofs u8 & v8 must deliver
-                    % global indices 7*2+1 = 15 & 7*2+2 = 16 the first
-                    % summend is called start_position, the second one is
-                    % called offset and can be obtained via a modulu
-                    % operation.
+                    # retrieve the position in the global stiffness matrix.
+                    # example 2D: node 8 with dofs u8 & v8 must deliver
+                    # global indices 7*2+1 = 15 & 7*2+2 = 16 the first
+                    # summend is called start_position, the second one is
+                    # called offset and can be obtained via a modulu
+                    # operation.
                     row_start_position = (global_node_index_row - 1)*dofs_per_node;
                     col_start_position = (global_node_index_col - 1)*dofs_per_node;
                     
@@ -127,9 +127,9 @@ classdef Analysis < handle
                     col_offset = mod(local_col_index,dofs_per_node);
                     
                     
-                    % at the last index of each node, the mod operator
-                    % returns 0, but it should of course return
-                    % dofs_per_node
+                    # at the last index of each node, the mod operator
+                    # returns 0, but it should of course return
+                    # dofs_per_node
                     if row_offset == 0
                         row_offset = dofs_per_node;
                     end
@@ -137,7 +137,7 @@ classdef Analysis < handle
                         col_offset = dofs_per_node;
                     end
                     
-                    % so the global indices are finally obtained
+                    # so the global indices are finally obtained
                     global_row_index = row_start_position + row_offset;
                     global_col_index = col_start_position + col_offset;
                     
@@ -148,7 +148,7 @@ classdef Analysis < handle
         
         function global_load = assembleLoad(node_container, local_load, global_load)
             
-            % analogous to assembleStiffness(...) method above
+            # analogous to assembleStiffness(...) method above
             dofs_per_node = length(local_load)/node_container.type.shape.getNumberOfNodes;
             for local_row_index = 1:length(local_load)
                 
