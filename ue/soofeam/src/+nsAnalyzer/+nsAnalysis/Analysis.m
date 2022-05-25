@@ -83,7 +83,10 @@ classdef Analysis < handle
         function global_stiffness = assembleStiffness(node_container, local_stiffness, global_stiffness)
             
             % dofs_per_node is dimension of stiffness matrix divided by
-            % number of nodes per element.
+            % number of nodes per element. I have not figured out why, yet.
+            % Maybe number of entries means numbers of dofs per node, so 2
+            % for 2D and 3 for 3D original line: nr_of_entries =
+            % local_stiffness.shape(1)/node_container.type.shape.getNumberOfNodes;
             
             dofs_per_element = length(local_stiffness);
             
