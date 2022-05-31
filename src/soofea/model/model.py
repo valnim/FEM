@@ -33,6 +33,7 @@ class IntegrationPoint(object):
         self._coordinates = coordinates
         self.surface_load = None
         self.volume_load = None
+        self.pressure = None
 
     def setSurfaceLoad(self, surface_load):
         self.surface_load = surface_load(*tuple(self._coordinates.reshape(1, -1)[0]))
@@ -45,6 +46,9 @@ class IntegrationPoint(object):
 
     def getNaturalCoordinates(self):
         return self.math_ip.natural_coordinates
+
+    def setPressure(self, pressure):
+        self.pressure = pressure
 
 
 # noinspection PyRedundantParentheses
@@ -360,6 +364,10 @@ class Model:
 
     def getBoundary(self, N):
         return self._boundary_dict[N]
+
+    def addTimeStep(self, time):
+        new_index = self.time_bar[-1].index + 1
+        self.time_bar.append(TimeStamp(new_index, time))
 
     def __str__(self):
         print_str = ''
