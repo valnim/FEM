@@ -1,20 +1,20 @@
 classdef Node < nsModel.NumberedObject
-    %NODE Node of the finite element grid
+    #NODE Node of the finite element grid
     
     properties ( SetAccess = private )
-        % needed for a nonlinear formulation.
-        % still there for the linear one.
+        # needed for a nonlinear formulation.
+        # still there for the linear one.
         undeformed_coordinates
         spatial_coordinates
         
-        % formulation-independent properties
+        # formulation-independent properties
         dimension
         dof
     end
     
     methods
-        % A node gets created only with its material coordinates, at the
-        % initial state t=0.
+        # A node gets created only with its material coordinates, at the
+        # initial state t=0.
         function self = Node( number, coordinates )
             self@nsModel.NumberedObject(number);
             self.undeformed_coordinates = coordinates;
@@ -25,10 +25,10 @@ classdef Node < nsModel.NumberedObject
         end
         
         function setBCDisplacement( self, coord_flag, displacement )
-            % Call this method in the BCHandler of a linear analysis, where
-            % absolute displacements are Dirichlet boundary conditions.
-            % Pass a coordinate flag ('x', 'y' or 'z') to decide in which
-            % coordinate direction the displacement is constrained.
+            # Call this method in the BCHandler of a linear analysis, where
+            # absolute displacements are Dirichlet boundary conditions.
+            # Pass a coordinate flag ('x', 'y' or 'z') to decide in which
+            # coordinate direction the displacement is constrained.
             switch coord_flag
                 case 'x'
                     self.dof.setConstraintDisplacement( 1, displacement );
