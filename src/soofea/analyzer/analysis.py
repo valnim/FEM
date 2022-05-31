@@ -139,3 +139,27 @@ class LinearAnalysis(Analysis):
 
         if not output_handler == None:
             output_handler.write(self._model)
+
+
+class NonlinearAnalysis(Analysis):
+    def __init__(self, model, convergence_criteria, max_iterations):
+        Analysis.__init__(self, model)
+        self._convergence_criteria = convergence_criteria
+        self._max_iteration = max_iterations
+
+    def run(self, output_handler=None):
+        print("-> Nonlinear analysis")
+
+        for time_stamp in self._model.time_bar[1:]:
+            print(f"\ntime step: {time_stamp.index}; t = {time_stamp.time}")
+            for iter in range(self._max_iteration):
+                if iter == 0:
+                    pass
+
+
+
+        self._model.bc_handler.integrateBC()
+        self.solveFESystem()
+
+        if not output_handler == None:
+            output_handler.write(self._model)

@@ -152,6 +152,7 @@ class NonlinearAnalysis(Analysis):
             print(f"\ntime step: {time_stamp.index}; t = {time_stamp.time}")
             for iter in range(self._max_iteration):
                 if iter == 0:
+                    pass
 
 
 
