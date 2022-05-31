@@ -52,12 +52,12 @@ def test_plateQuads():
 
     model, analysis = plateQuads.read()
 
-    print('Node Nr. 89: ' + str(model._node_dict[89].coordinates) + '\n')
+    print('Node Nr. 89: ' + str(model._node_dict[89].undeformed_coordinates) + '\n')
     print('Element Nr. 23: ' + str(model._element_dict[63].node_number_list) + '\n')
-    print('Node Nr. 51: ' + str(model._node_dict[51].coordinates) + '\n')
-    print('Node Nr. 60: ' + str(model._node_dict[60].coordinates) + '\n')
-    print('Node Nr. 61: ' + str(model._node_dict[61].coordinates) + '\n')
-    print('Node Nr. 52: ' + str(model._node_dict[52].coordinates) + '\n')
+    print('Node Nr. 51: ' + str(model._node_dict[51].undeformed_coordinates) + '\n')
+    print('Node Nr. 60: ' + str(model._node_dict[60].undeformed_coordinates) + '\n')
+    print('Node Nr. 61: ' + str(model._node_dict[61].undeformed_coordinates) + '\n')
+    print('Node Nr. 52: ' + str(model._node_dict[52].undeformed_coordinates) + '\n')
     print('Boundary Nr. 3: ' + str(len(model._boundary_dict[3].component_list)) + '\n')
     print('wait')
 
@@ -130,7 +130,7 @@ def testDOF():
     model, analysis = plateDOF.read()
 
     for node in model._node_dict.values():
-        print(f"Node {node.number:3}: {node.coordinates}")
+        print(f"Node {node.number:3}: {node.undeformed_coordinates}")
 
     analysis.run()
     print()
@@ -148,7 +148,7 @@ def testAnalsysis():
     model, analysis = plateAnalysis.read()
 
     for node in model._node_dict.values():
-        print(f"Node {node.number:3}: {node.coordinates}")
+        print(f"Node {node.number:3}: {node.undeformed_coordinates}")
 
 
 
@@ -171,7 +171,7 @@ def test_input_corner():
     model, analysis = corner2d.read()
 
     for node in model._node_dict.values():
-        print(f"Node {node.number:3}: {node.coordinates}")
+        print(f"Node {node.number:3}: {node.undeformed_coordinates}")
 
     analysis.run()
     print()

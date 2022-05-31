@@ -64,19 +64,19 @@ class Node(NumberedObject):
 
     def __init__(self, number, coordinates):
         NumberedObject.__init__(self, number)
-        self.coordinates = coordinates
+        self.undeformed_coordinates = coordinates
         self.spatial_coordinates = coordinates
-        self.dof = DisplacementDOF(len(self.coordinates))
+        self.dof = DisplacementDOF(len(self.undeformed_coordinates))
         '''The degrees of freedom: For classical structural analysis this
             would be of type :py:class:`soofea.model.dof.DisplacementDOF`.
             We therefore connect this attribute with a displacement dof.'''
-        self.load = ForceLoad(len(self.coordinates))
+        self.load = ForceLoad(len(self.undeformed_coordinates))
         '''The load: For classical structural analysis this would be of
             type :py:class:`soofea.model.load.ForceLoad`.
             We therefore connect this attribute with a force load.'''
 
     def __str__(self):
-        print_str = 'Node ' + str(self.number) + ' @ ' + str(self.coordinates) + '\n'
+        print_str = 'Node ' + str(self.number) + ' @ ' + str(self.undeformed_coordinates) + '\n'
         return (print_str)
 
     def getDimension(self):
@@ -84,7 +84,7 @@ class Node(NumberedObject):
         Can be used to easily get the dimension of the global coordinate system.
         It simply returns the amount of material coordinates for this node.
         '''
-        return (len(self.coordinates))
+        return (len(self.undeformed_coordinates))
 
     def setBCDOF(self, x=None, y=None, z=None):
         '''
@@ -204,7 +204,7 @@ class NodeContainer(NumberedObject):
         columns = [None] * N
         if configuration == 'undeformed':
             for node_number in range(N):
-                columns[node_number] = self.node_list[node_number].coordinates
+                columns[node_number] = self.node_list[node_number].undeformed_coordinates
         elif(configuration == 'spatial'):
             for node_number in range(N):
                 columns[node_number] = self.node_list[node_number].spatial_coordinates

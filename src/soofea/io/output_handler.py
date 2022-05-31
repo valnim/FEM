@@ -43,9 +43,9 @@ class VTKOutputHandler(OutputHandler):
         xyz = []
         for node in model._node_dict.values():
             if (model.dimension == 2):
-                xyz = [node.coordinates[0], node.coordinates[1], 0]
+                xyz = [node.undeformed_coordinates[0], node.undeformed_coordinates[1], 0]
             else:
-                xyz = node.coordinates
+                xyz = node.undeformed_coordinates
             node_list.InsertPoint(node.number, xyz)
         mesh.SetPoints(node_list)
 
