@@ -291,6 +291,7 @@ class Model:
         self._type_dict = {}
         self._material_dict = {}
         self._boundary_dict = {}
+        self.time_bar.append(TimeStamp(0.0, 0.0))
 
     def addBCHandler(self, bc_handler):
         self.bc_handler = bc_handler
@@ -306,7 +307,7 @@ class Model:
         node_list = []
         for node_number in node_number_list:
             node_list.append(self._node_dict[node_number])
-        return (node_list)
+        return node_list
 
     def addNode(self, node):
         self._node_dict[node.number] = node
