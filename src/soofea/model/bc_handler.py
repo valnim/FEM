@@ -16,17 +16,16 @@ class BCHandler:
     def setModel(self, model):
         self._model = model
 
-    def resetBC(self):
+    def resetBC(self):  # TODO Vergleichen mit HOFER
         for node in self._model.node_list:
             for coord_id in range(node.getDimension()):
                 node.dof_handler.resetDof(coord_id)
 
-    def setPrescribedDOFZero(self):
+    def setPrescribedDOFZero(self):  # TODO Vergleichen mit HOFER
         for node in self._model.node_list:
             for coord_id in range(node.getDimension()):
                 if node.dof_handler.getConstraint(coord_id):
                     node.dof_handler.setConstraintValue(coord_id, 0.0)
-
 
     @abstractmethod
     def integrateBC(self, time_stamp):
