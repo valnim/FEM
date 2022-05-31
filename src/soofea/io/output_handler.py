@@ -68,14 +68,14 @@ class VTKOutputHandler(OutputHandler):
         for node in model._node_dict.values():
             if (model.dimension == 2):
                 disp_array.InsertTuple3(node.number, \
-                                        node.dof.getValue(0), \
-                                        node.dof.getValue(1), \
+                                        node.dof.getDisplacement(0), \
+                                        node.dof.getDisplacement(1), \
                                         0)
             else:
                 disp_array.InsertTuple3(node.number, \
-                                        node.dof.getValue(0), \
-                                        node.dof.getValue(1), \
-                                        node.dof.getValue(2))
+                                        node.dof.getDisplacement(0), \
+                                        node.dof.getDisplacement(1), \
+                                        node.dof.getDisplacement(2))
         mesh.GetPointData().SetVectors(disp_array)
 
         #        # Add strain

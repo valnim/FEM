@@ -75,11 +75,11 @@ class Analysis:
                         if row_counter == global_col_index:
                             global_load[row_counter] = \
                                 global_stiffness[row_counter, row_counter] * \
-                                node.dof.getValue(coord_index)
+                                node.dof.getDisplacement(coord_index)
                         else:
                             global_load[row_counter] -= \
                                 global_stiffness[row_counter, global_col_index] * \
-                                node.dof.getValue(coord_index)
+                                node.dof.getDisplacement(coord_index)
 
                     temp = global_stiffness[global_col_index, global_col_index]
                     global_stiffness[:, global_col_index] = 0.0
@@ -95,7 +95,7 @@ class Analysis:
                 for coord_index in range(self._model.dimension):
                     global_index = (node.number - 1) * self._model.dimension + \
                                    coord_index
-                    global_load[global_index] += f_load.getValue(coord_index)
+                    global_load[global_index] += f_load.getDisplacement(coord_index)
 
     def updateDOF(self, solution_vector):
         for node in self._model._node_dict.values():
