@@ -44,9 +44,7 @@ class HyperelasticStVenantKirchhoffMaterial(Material):
         self._twodim_type = twodim_type
 
     def getElasticityMatrix(self, E_green):
-
         dimension = len(E_green)
-
         lam = self._nu * self._E / ((1 + self._nu) * (1 - 2 * self._nu))
         mu = self._E / (2 * (1 + self._nu))
 
@@ -74,5 +72,6 @@ class HyperelasticStVenantKirchhoffMaterial(Material):
         if self._twodim_type == 'plane_stress':
             lam = 2 * mu * lam / (lam + 2 * mu)
 
-        S = 1/2 * (lam * np.transpose(E_green) @ np.identity(dimension) + 2 * mu * E_green)
+        S = lam * np.trace(E_green) * np.identity(dimension) + 2 * mu * E_green
+        #S = lam * E_green.T @ np.identity(len(E_green)) + 2 * mu * E_green
         return S
