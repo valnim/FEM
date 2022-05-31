@@ -30,11 +30,8 @@ class Analysis:
                 row_coord_offset = local_row_counter % nr_of_entries
                 col_coord_offset = local_col_counter % nr_of_entries
 
-                global_row_index = (row_node.number - 1) * nr_of_entries + \
-                                   row_coord_offset
-
-                global_col_index = (col_node.number - 1) * nr_of_entries + \
-                                   col_coord_offset
+                global_row_index = (row_node.number - 1) * nr_of_entries + row_coord_offset
+                global_col_index = (col_node.number - 1) * nr_of_entries + col_coord_offset
 
                 global_stiffness[global_row_index, global_col_index] += \
                     local_stiffness[local_row_counter, local_col_counter]
@@ -93,15 +90,13 @@ class Analysis:
             # if not np.allclose(f_load, np.zeros_like(f_load)):
             if not np.all(f_load == 0.0):
                 for coord_index in range(self._model.dimension):
-                    global_index = (node.number - 1) * self._model.dimension + \
-                                   coord_index
+                    global_index = (node.number - 1) * self._model.dimension + coord_index
                     global_load[global_index] += f_load.getDisplacement(coord_index)
 
     def updateDOF(self, solution_vector):
         for node in self._model._node_dict.values():
             for coord_index in range(self._model.dimension):
-                global_index = (node.number - 1) * self._model.dimension + \
-                               coord_index
+                global_index = (node.number - 1) * self._model.dimension + coord_index
                 node.dof.setDisplacement(coord_index,
                                          solution_vector[global_index])
 
@@ -152,13 +147,13 @@ class NonlinearAnalysis(Analysis):
 
         for time_stamp in self._model.time_bar[1:]:
             print(f"\ntime step: {time_stamp.index}; t = {time_stamp.time}")
-            for iter in range(self._max_iteration):
-                if iter == 0:
+            for i in range(self._max_iteration):
+                if i == 0:
                     pass
 
 
-
         self._model.bc_handler.integrateBC()
+        #self._model.bc_handler.integrateBC(time_stamp) # TODO preperation for UE6
         self.solveFESystem()
 
         if not output_handler == None:
