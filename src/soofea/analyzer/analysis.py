@@ -91,7 +91,7 @@ class Analysis:
             if not np.all(f_load == 0.0):
                 for coord_index in range(self._model.dimension):
                     global_index = (node.number - 1) * self._model.dimension + coord_index
-                    global_load[global_index] += f_load.getDisplacement(coord_index)
+                    global_load[global_index] += f_load.getValue(coord_index)
 
     def updateDOF(self, solution_vector):
         for node in self._model._node_dict.values():
@@ -109,7 +109,7 @@ class Analysis:
         self.assembleStiffness(global_stiffness)
         self.assembleLoad(global_load)
 
-        self.integrateNeumannBC(global_load)
+        #self.integrateNeumannBC(global_load)
         self.integrateDirichletBC(global_stiffness, global_load)
 
         print(
@@ -120,8 +120,8 @@ class Analysis:
         print("\-> ... done")
 
         self.updateDOF(displacement)
-        return fabs(np.dot(displacement, global_load))
-
+        #return fabs(np.dot(displacement, global_load))
+        return displacement, global_load
 
 class LinearAnalysis(Analysis):
     def __init__(self, model):
@@ -132,7 +132,7 @@ class LinearAnalysis(Analysis):
         self._model.bc_handler.integrateBC()
         self.solveFESystem()
 
-        if not output_handler == None:
+        if output_handler is not None:
             output_handler.write(self._model)
 
 
@@ -145,16 +145,44 @@ class NonlinearAnalysis(Analysis):
     def run(self, output_handler=None):
         print("-> Nonlinear analysis")
 
+        if output_handler is not None:
+            output_handler.write(self._model)
+
         for time_stamp in self._model.time_bar[1:]:
             print(f"\ntime step: {time_stamp.index}; t = {time_stamp.time}")
+            self._model.bc_handler.resetBC()
+            self._model.bc_handler.integrateBC(time_stamp.index)
+
+            reference_inc = 0.0
+            reference_res = 0.0
+
             for i in range(self._max_iteration):
+                increment, residuum = self.solveFESystem()
+
                 if i == 0:
-                    pass
+                    self._model.bc_handler.setPrescribedDOFZero()
+                    reference_inc = increment
+                    reference_res = residuum
+
+                normed_inc = np.linalg.norm(increment) / np.linalg.norm(reference_inc)
+                normed_res = np.linalg.norm(residuum) / np.linalg.norm(reference_res)
+                print(f"\n  {i}\t\t\t{normed_inc}\t{normed_res}")
+
+                if self._convergence_criteria > normed_inc and self._convergence_criteria > normed_res:
+                    break
+                elif i + 1 == self._max_iteration:
+                    raise Exception('Max Iteration number was reached in '
+                                    'Newton-Raphson procedure before convergence was reached')
+
+            self._model.last_finished_time_step = time_stamp.index
+
+            if output_handler is not None:
+                output_handler.write(self._model)
 
 
-        self._model.bc_handler.integrateBC()
-        #self._model.bc_handler.integrateBC(time_stamp) # TODO preperation for UE6
-        self.solveFESystem()
-
-        if not output_handler == None:
-            output_handler.write(self._model)
+    def updateDOF(self, solution_vector):
+        for node in self._model._node_dict.values():
+            for coord_index in range(self._model.dimension):
+                global_index = (node.number - 1) * self._model.dimension + coord_index
+                node.dof.addIncrement(coord_index, solution_vector[global_index])
+                node.updateCoordinates()

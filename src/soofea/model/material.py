@@ -73,5 +73,4 @@ class HyperelasticStVenantKirchhoffMaterial(Material):
             lam = 2 * mu * lam / (lam + 2 * mu)
 
         S = lam * np.trace(E_green) * np.identity(dimension) + 2 * mu * E_green
-        #S = lam * E_green.T @ np.identity(len(E_green)) + 2 * mu * E_green
         return S

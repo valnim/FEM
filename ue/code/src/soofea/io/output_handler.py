@@ -21,7 +21,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
 import os, sys
 import vtk
-from vtk.util.colors import lamp_black
+#from vtk.util.colors import lamp_black
 
 
 class OutputHandler:
@@ -166,7 +166,7 @@ class VTKOutputHandler(OutputHandler):
         edge_actor = vtk.vtkActor()
         edge_actor.SetMapper(edge_mapper)
         edge_actor.GetProperty().SetColor(0, 0, 0)
-        edge_actor.GetProperty().SetDiffuseColor(lamp_black)
+        #edge_actor.GetProperty().SetDiffuseColor(lamp_black)
 
         renderer = vtk.vtkRenderer()
         renderWindow = vtk.vtkRenderWindow()

@@ -291,7 +291,8 @@ class Model:
         self._type_dict = {}
         self._material_dict = {}
         self._boundary_dict = {}
-        self.time_bar.append(TimeStamp(0.0, 0.0))
+        self.time_bar.append(TimeStamp(0, 0.0))
+        self.last_finished_time_step = 0
 
     def addBCHandler(self, bc_handler):
         self.bc_handler = bc_handler
