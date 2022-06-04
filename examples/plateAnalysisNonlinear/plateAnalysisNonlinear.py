@@ -18,12 +18,12 @@ class MyBCHandler(BCHandler):
         top_boundary = 3
 
         for node in self._model.getBoundary(bottom_boundary).node_list:
-            node.setBCDOF(x=0.0, y=0.0)
+            node.setBCIncrement(x=0.0, y=0.0)
 
         top_y_value = 10 / (len(self._model.time_bar) - 1)
 
         for node in self._model.getBoundary(top_boundary).node_list:
-            node.setBCDOF(y=top_y_value)
+            node.setBCIncrement(y=top_y_value)
 
 
         #        for node in (set(self._model.getBoundary(2).node_list)): # & set(self._model.getBoundary(4).node_list)):
@@ -71,7 +71,7 @@ def read():
     #    model.getType(2).height = 1.0;
     #    model.getType(2).implementation = None
 
-    model.addMaterial(HyperelasticStVenantKirchhoffMaterial(1, 2.1e5, 0.3, 'plane_stress'))
+    model.addMaterial(HyperelasticStVenantKirchhoffMaterial(1, 2.1e5, 0.3, 'plane_strain'))
 
     input_handler.readMesh(model)
 

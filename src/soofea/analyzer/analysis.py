@@ -54,11 +54,11 @@ class Analysis:
         print('\--> Assemble global load')
         for boundary in self._model._boundary_dict.values():
             for face in boundary.component_list:
-                F_surface_face = face.type.implementation.calcSurfaceLoad(face)
-                self.loadAssembler(face, F_surface_face, global_load)
+               F_surface_face = face.type.implementation.calcSurfaceLoad(face)
+               self.loadAssembler(face, F_surface_face, global_load)
         for element in self._model._element_dict.values():
-            F_volume = element.type.implementation.calcLoad(element)
-            self.loadAssembler(element, F_volume, global_load)
+            F_int = element.type.implementation.calcLoad(element)
+            self.loadAssembler(element, F_int, global_load)
 
 
     def integrateDirichletBC(self, global_stiffness, global_load):
@@ -69,14 +69,16 @@ class Analysis:
                     global_col_index = (node.number - 1) * self._model.dimension + \
                                        coord_index
                     for row_counter in range(global_stiffness.shape[0]):
-                        if row_counter == global_col_index:
-                            global_load[row_counter] = \
-                                global_stiffness[row_counter, row_counter] * \
-                                node.dof.getDisplacement(coord_index)
+                        if isinstance(self, LinearAnalysis):
+                            bc_value = node.dof.getDisplacement(coord_index)
+                        elif isinstance(self, NonlinearAnalysis):
+                            bc_value = node.dof.getIncrement(coord_index)
                         else:
-                            global_load[row_counter] -= \
-                                global_stiffness[row_counter, global_col_index] * \
-                                node.dof.getDisplacement(coord_index)
+                            raise Exception("Unknown analysis type")
+                        if row_counter == global_col_index:
+                            global_load[row_counter] = global_stiffness[row_counter, row_counter] * bc_value
+                        else:
+                            global_load[row_counter] -= global_stiffness[row_counter, global_col_index] * bc_value
 
                     temp = global_stiffness[global_col_index, global_col_index]
                     global_stiffness[:, global_col_index] = 0.0
@@ -109,7 +111,7 @@ class Analysis:
         self.assembleStiffness(global_stiffness)
         self.assembleLoad(global_load)
 
-        #self.integrateNeumannBC(global_load)
+        self.integrateNeumannBC(global_load)
         self.integrateDirichletBC(global_stiffness, global_load)
 
         print(

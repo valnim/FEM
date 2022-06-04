@@ -226,7 +226,7 @@ class NonlinearElementImpl(ElementImpl):
         # internal Forces
         F_int = methodIntegrate(NonlinearElementImpl._internalForcesIntegrator, self, element.int_points, element)
 
-        F = -F_int #+ F_volume
+        F = - F_int #+ F_volume
         return F
 
     def volumeLoadIntegrator(self, int_point, element, parameters=None):
