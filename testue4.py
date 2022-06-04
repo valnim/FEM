@@ -7,7 +7,7 @@ if src_path not in sys.path:
 
 
 def tests():
-    test_excercise1()
+    #test_excercise1()
     test_nonlinear_elementimpl()
 
 

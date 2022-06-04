@@ -213,7 +213,7 @@ class NonlinearElementImpl(ElementImpl):
         E = 0.5 * (np.transpose(F)*F-I)
 
         dN = element.type.shape.getDerivativeArray(int_point.getNaturalCoordinates())
-        J = jac_undeformed.get()
+        J = jac_undeformed.getInv()
         J_det_inv = jac_undeformed.getDet()
 
         return F, E, dN, J, J_det_inv
