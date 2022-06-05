@@ -16,9 +16,7 @@ class Analysis:
         self._model = model
 
     def stiffnessAssembler(self, node_container, local_stiffness, global_stiffness):
-        nr_of_entries = local_stiffness.shape[0] / \
-                        node_container.type.shape.getNumberOfNodes()
-
+        nr_of_entries = local_stiffness.shape[0] / node_container.type.shape.getNumberOfNodes()
         for local_row_counter in range(local_stiffness.shape[0]):
             for local_col_counter in range(local_stiffness.shape[1]):
                 row_node = node_container.getNode(
@@ -54,12 +52,11 @@ class Analysis:
         print('\--> Assemble global load')
         for boundary in self._model._boundary_dict.values():
             for face in boundary.component_list:
-               F_surface_face = face.type.implementation.calcSurfaceLoad(face)
-               self.loadAssembler(face, F_surface_face, global_load)
+                F_surface_face = face.type.implementation.calcSurfaceLoad(face)
+                self.loadAssembler(face, F_surface_face, global_load)
         for element in self._model._element_dict.values():
             F_int = element.type.implementation.calcLoad(element)
             self.loadAssembler(element, F_int, global_load)
-
 
     def integrateDirichletBC(self, global_stiffness, global_load):
         print('\--> Integrate Dirichlet BC')
@@ -122,8 +119,9 @@ class Analysis:
         print("\-> ... done")
 
         self.updateDOF(displacement)
-        #return fabs(np.dot(displacement, global_load))
+        # return fabs(np.dot(displacement, global_load))
         return displacement, global_load
+
 
 class LinearAnalysis(Analysis):
     def __init__(self, model):
@@ -180,7 +178,6 @@ class NonlinearAnalysis(Analysis):
 
             if output_handler is not None:
                 output_handler.write(self._model)
-
 
     def updateDOF(self, solution_vector):
         for node in self._model._node_dict.values():

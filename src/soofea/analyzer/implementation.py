@@ -178,8 +178,6 @@ class NonlinearElementImpl(ElementImpl):
                                                              * J[p, o] * J_det_inv
         return np.reshape(A_ISC, (dofs_per_element, dofs_per_element), 'F')
 
-
-
     def _internalForcesIntegrator(self, int_point, element, parameters=None):
         dim = element.node_list[0].getDimension()
         n_nodes = len(element.node_number_list)
@@ -208,7 +206,7 @@ class NonlinearElementImpl(ElementImpl):
 
         I = np.identity(len(jac_undeformed.get()))
 
-        F = np.linalg.inv(jac_deformed.get()) @ jac_undeformed.get() #TODO überprüfen ob matmul
+        F = np.linalg.inv(jac_deformed.get()) @ jac_undeformed.get()
 
         E = 0.5 * (np.transpose(F)*F-I)
 
