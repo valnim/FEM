@@ -9,18 +9,37 @@ class DOF:
 class DisplacementDOF(DOF):
     def __init__(self, dimension):
         DOF.__init__(self)
-        self._constraint = np.zeros(dimension, dtype='bool')
+        self._constraints = np.zeros(dimension, dtype='bool')
         self._displacements = np.zeros(dimension)
+        self._increments = np.zeros(dimension)
 
-    def getValue(self, coord_id):
+    def getDisplacements(self):
+        return self._displacements
+
+    def getDisplacement(self, coord_id):
         return self._displacements[coord_id]
-
-    def getConstraint(self, coord_id):
-        return self._constraint[coord_id]
-
-    def setConstraintValue(self, coord_id, value):
-        self._constraint[coord_id] = True
-        self._displacements[coord_id] = value
 
     def setDisplacement(self, coord_id, value):
         self._displacements[coord_id] = value
+
+    def getConstraint(self, coord_id):
+        return self._constraints[coord_id]
+
+    def setConstraintDisplacement(self, coord_id, displacement):
+        self._constraints[coord_id] = True
+        self._displacements[coord_id] = displacement
+
+    def setConstraintIncrement(self, coord_id, increment):
+        self._increments[coord_id] = increment
+        self._constraints[coord_id] = True
+
+    def getIncrement(self, coord_id):
+        return self._increments[coord_id]
+
+    def resetDOF(self, coord_id):
+        self._increments[coord_id] = 0.0
+        self._constraints[coord_id] = False
+
+    def addIncrement(self, coord_id, increment):
+        self._displacements[coord_id] += increment
+        self._increments[coord_id] = increment

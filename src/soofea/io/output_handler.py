@@ -21,7 +21,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
 import os, sys
 import vtk
-from vtk.util.colors import lamp_black
+#from vtk.util.colors import lamp_black
 
 
 class OutputHandler:
@@ -43,9 +43,9 @@ class VTKOutputHandler(OutputHandler):
         xyz = []
         for node in model._node_dict.values():
             if (model.dimension == 2):
-                xyz = [node.coordinates[0], node.coordinates[1], 0]
+                xyz = [node.undeformed_coordinates[0], node.undeformed_coordinates[1], 0]
             else:
-                xyz = node.coordinates
+                xyz = node.undeformed_coordinates
             node_list.InsertPoint(node.number, xyz)
         mesh.SetPoints(node_list)
 
@@ -68,14 +68,14 @@ class VTKOutputHandler(OutputHandler):
         for node in model._node_dict.values():
             if (model.dimension == 2):
                 disp_array.InsertTuple3(node.number, \
-                                        node.dof.getValue(0), \
-                                        node.dof.getValue(1), \
+                                        node.dof.getDisplacement(0), \
+                                        node.dof.getDisplacement(1), \
                                         0)
             else:
                 disp_array.InsertTuple3(node.number, \
-                                        node.dof.getValue(0), \
-                                        node.dof.getValue(1), \
-                                        node.dof.getValue(2))
+                                        node.dof.getDisplacement(0), \
+                                        node.dof.getDisplacement(1), \
+                                        node.dof.getDisplacement(2))
         mesh.GetPointData().SetVectors(disp_array)
 
         #        # Add strain
@@ -166,7 +166,7 @@ class VTKOutputHandler(OutputHandler):
         edge_actor = vtk.vtkActor()
         edge_actor.SetMapper(edge_mapper)
         edge_actor.GetProperty().SetColor(0, 0, 0)
-        edge_actor.GetProperty().SetDiffuseColor(lamp_black)
+        #edge_actor.GetProperty().SetDiffuseColor(lamp_black)
 
         renderer = vtk.vtkRenderer()
         renderWindow = vtk.vtkRenderWindow()

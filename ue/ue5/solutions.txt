@@ -1,0 +1,26 @@
+Excercise 2a):
+A convergence criterion of 1e-100 can not converge because the floating point accuraccy is 1e-16.
+Therefore to converge a number like 1e-15 can be used.
+
+Excercise 2b):
+a)
+For a criterion of 1e-3 convergence is reached after 3 iterations.
+The horizontal displacement of the top right corner is -3.03533
+
+b)
+For a criterion of 1e-13 convergence is reached after 5 iterations.
+The horizontal displacement of the top right corner is -3.03533
+
+As the solutions are the same an convergence criterion of 1e-3 is sufficient.
+
+Excercise 3):
+a) 2x2
+For a criterion of 1e-10 convergence is reached after 5 iterations.
+The horizontal displacement of the top right corner is -3.03533
+
+b) 10x10
+For a criterion of 1e-10 convergence is reached after 6 iterations.
+The horizontal displacement of the top right corner is -3.10274
+
+The accuracy for 2x2 is not as good as for 10x10 but requires far less computation.
+Generally an increase in elements results in better accuracy than an decrease of the convergence criterion.

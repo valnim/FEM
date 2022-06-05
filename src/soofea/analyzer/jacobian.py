@@ -51,3 +51,9 @@ class ElementJacobian(Jacobian):
             return npl.norm(np.cross(JInv[:, 0], JInv[:, 1]))
         else:
             return npl.norm(JInv[:, 0])
+
+
+class BoundaryJacobian(Jacobian):
+    def __init__(self, boundary, int_point, configuration='undeformed'):
+        Jacobian.__init__(self, boundary, int_point, configuration)
+

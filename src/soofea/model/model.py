@@ -33,6 +33,7 @@ class IntegrationPoint(object):
         self._coordinates = coordinates
         self.surface_load = None
         self.volume_load = None
+        self.pressure = None
 
     def setSurfaceLoad(self, surface_load):
         self.surface_load = surface_load(*tuple(self._coordinates.reshape(1, -1)[0]))
@@ -46,7 +47,11 @@ class IntegrationPoint(object):
     def getNaturalCoordinates(self):
         return self.math_ip.natural_coordinates
 
+    def setPressure(self, pressure):
+        self.pressure = pressure
 
+
+# noinspection PyRedundantParentheses
 class Node(NumberedObject):
     '''
     We defined the points, where the interpolation conditions are fulfilled,
@@ -59,19 +64,19 @@ class Node(NumberedObject):
 
     def __init__(self, number, coordinates):
         NumberedObject.__init__(self, number)
-        self.coordinates = coordinates
+        self.undeformed_coordinates = coordinates
         self.spatial_coordinates = coordinates
-        self.dof = DisplacementDOF(len(self.coordinates))
+        self.dof = DisplacementDOF(len(self.undeformed_coordinates))
         '''The degrees of freedom: For classical structural analysis this
             would be of type :py:class:`soofea.model.dof.DisplacementDOF`.
             We therefore connect this attribute with a displacement dof.'''
-        self.load = ForceLoad(len(self.coordinates))
+        self.load = ForceLoad(len(self.undeformed_coordinates))
         '''The load: For classical structural analysis this would be of
             type :py:class:`soofea.model.load.ForceLoad`.
             We therefore connect this attribute with a force load.'''
 
     def __str__(self):
-        print_str = 'Node ' + str(self.number) + ' @ ' + str(self.coordinates) + '\n'
+        print_str = 'Node ' + str(self.number) + ' @ ' + str(self.undeformed_coordinates) + '\n'
         return (print_str)
 
     def getDimension(self):
@@ -79,7 +84,7 @@ class Node(NumberedObject):
         Can be used to easily get the dimension of the global coordinate system.
         It simply returns the amount of material coordinates for this node.
         '''
-        return (len(self.coordinates))
+        return (len(self.undeformed_coordinates))
 
     def setBCDOF(self, x=None, y=None, z=None):
         '''
@@ -91,11 +96,19 @@ class Node(NumberedObject):
         :param z: The prescribed displacement in z direction
         '''
         if x != None:
-            self.dof.setConstraintValue(0, x)
+            self.dof.setConstraintDisplacement(0, x)
         if y != None:
-            self.dof.setConstraintValue(1, y)
+            self.dof.setConstraintDisplacement(1, y)
         if z != None:
-            self.dof.setConstraintValue(2, z)
+            self.dof.setConstraintDisplacement(2, z)
+
+    def setBCIncrement(self, x=None, y=None, z=None):
+        if x != None:
+            self.dof.setConstraintIncrement(0, x)
+        if y != None:
+            self.dof.setConstraintIncrement(1, y)
+        if z != None:
+            self.dof.setConstraintIncrement(2, z)
 
     def setBCLoad(self, x=None, y=None, z=None):
         '''
@@ -112,6 +125,9 @@ class Node(NumberedObject):
             self.load.setValue(1, y)
         if z != None:
             self.load.setValue(2, z)
+
+    def updateCoordinates(self):
+        self.spatial_coordinates = self.undeformed_coordinates + self.dof.getDisplacements()
 
 
 class NodeContainer(NumberedObject):
@@ -186,12 +202,14 @@ class NodeContainer(NumberedObject):
     def getCoordinateArray(self, configuration='undeformed'):
         N = self.getNumberOfNodes()
         columns = [None] * N
-        if(configuration == 'undeformed'):
+        if configuration == 'undeformed':
             for node_number in range(N):
-                columns[node_number] = self.node_list[node_number].coordinates
-        elif(configuration == 'spatial'):
+                columns[node_number] = self.node_list[node_number].undeformed_coordinates
+        elif configuration == 'spatial':
             for node_number in range(N):
                 columns[node_number] = self.node_list[node_number].spatial_coordinates
+        else:
+            raise "Configuration needs to be 'undeformed' or 'spatial'."
         return np.array(columns).T
 
 
@@ -247,7 +265,7 @@ class Boundary(NodeContainer):
         and the :py:attr:`soofea.model.model.NodeContainer.node_list`.
 
         :param component: The component (:py:class:`soofea.model.model.Edge` - 2D, :py:class:`soofea.model.model.Face` - 3D)
-	to add to the boundary
+        to add to the boundary
         '''
         self.component_list.append(component)
         for node in component.node_list:
@@ -265,6 +283,7 @@ class Model:
     def __init__(self, dimension):
         self.dimension = dimension
         self.bc_handler = None
+        self.time_bar = []
         self._node_dict = {}
         self._edge_dict = {}
         self._face_dict = {}
@@ -272,6 +291,8 @@ class Model:
         self._type_dict = {}
         self._material_dict = {}
         self._boundary_dict = {}
+        self.time_bar.append(TimeStamp(0, 0.0))
+        self.last_finished_time_step = 0
 
     def addBCHandler(self, bc_handler):
         self.bc_handler = bc_handler
@@ -287,13 +308,16 @@ class Model:
         node_list = []
         for node_number in node_number_list:
             node_list.append(self._node_dict[node_number])
-        return (node_list)
+        return node_list
 
     def addNode(self, node):
         self._node_dict[node.number] = node
 
     def getNode(self, number):
-        return (self._node_dict[number])
+        return self._node_dict[number]
+
+    def getNodes(self):
+        return self._node_dict.values()
 
     def getNumberOfNodes(self):
         return (len(self._node_dict))
@@ -341,7 +365,11 @@ class Model:
             self._boundary_dict[N].addComponent(self._face_dict[component_N])
 
     def getBoundary(self, N):
-        return (self._boundary_dict[N])
+        return self._boundary_dict[N]
+
+    def addTimeStep(self, time):
+        new_index = self.time_bar[-1].index + 1
+        self.time_bar.append(TimeStamp(new_index, time))
 
     def __str__(self):
         print_str = ''
@@ -357,3 +385,11 @@ class Model:
         for element in self._element_dict.values():
             print_str += str(element)
         return print_str
+
+
+class TimeStamp:
+    # TIMESTAMP A simple class we will use for time stepping. Note that we
+    # only perform quasistatic computations
+    def __init__(self, index, time):
+        self.index = index
+        self.time = time

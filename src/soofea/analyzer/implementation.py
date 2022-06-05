@@ -178,8 +178,6 @@ class NonlinearElementImpl(ElementImpl):
                                                              * J[p, o] * J_det_inv
         return np.reshape(A_ISC, (dofs_per_element, dofs_per_element), 'F')
 
-
-
     def _internalForcesIntegrator(self, int_point, element, parameters=None):
         dim = element.node_list[0].getDimension()
         n_nodes = len(element.node_number_list)
@@ -206,14 +204,14 @@ class NonlinearElementImpl(ElementImpl):
 
         jac_deformed = ElementJacobian(element, int_point, configuration='spatial')
 
-        I = np.identity(len(jac_undeformed.get()))
+        I = np.identity(len(jac_undeformed.getInv()))
 
-        F = np.linalg.inv(jac_deformed.get()) @ jac_undeformed.get() #TODO überprüfen ob matmul
+        F = np.linalg.inv(jac_deformed.getInv()) @ jac_undeformed.getInv()
 
-        E = 0.5 * (np.transpose(F)*F-I)
+        E = 0.5 * (np.transpose(F) @ F-I)
 
         dN = element.type.shape.getDerivativeArray(int_point.getNaturalCoordinates())
-        J = jac_undeformed.get()
+        J = jac_undeformed.getInv()
         J_det_inv = jac_undeformed.getDet()
 
         return F, E, dN, J, J_det_inv
@@ -226,7 +224,7 @@ class NonlinearElementImpl(ElementImpl):
         # internal Forces
         F_int = methodIntegrate(NonlinearElementImpl._internalForcesIntegrator, self, element.int_points, element)
 
-        F = -F_int #+ F_volume
+        F = - F_int #+ F_volume
         return F
 
     def volumeLoadIntegrator(self, int_point, element, parameters=None):
