@@ -56,7 +56,7 @@ def read():
     model = Model(dimension)
 
     for i in range(number_of_time_steps):
-        time = i * total_time / number_of_time_steps
+        time = (i + 1) * total_time / number_of_time_steps
         model.addTimeStep(time)
 
     model.addType(ElementType(1, 1, 'quad', [2, 2]))
