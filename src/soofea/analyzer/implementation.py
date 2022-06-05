@@ -204,11 +204,11 @@ class NonlinearElementImpl(ElementImpl):
 
         jac_deformed = ElementJacobian(element, int_point, configuration='spatial')
 
-        I = np.identity(len(jac_undeformed.get()))
+        I = np.identity(len(jac_undeformed.getInv()))
 
-        F = np.linalg.inv(jac_deformed.get()) @ jac_undeformed.get()
+        F = np.linalg.inv(jac_deformed.getInv()) @ jac_undeformed.getInv()
 
-        E = 0.5 * (np.transpose(F)*F-I)
+        E = 0.5 * (np.transpose(F) @ F-I)
 
         dN = element.type.shape.getDerivativeArray(int_point.getNaturalCoordinates())
         J = jac_undeformed.getInv()

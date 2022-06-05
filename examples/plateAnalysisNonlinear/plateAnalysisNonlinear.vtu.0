@@ -8,16 +8,16 @@
       <CellData>
       </CellData>
       <Points>
-        <DataArray type="Float32" Name="Points" NumberOfComponents="3" format="appended" RangeMin="0"                    RangeMax="14.142135624"         offset="64"                  />
+        <DataArray type="Float32" Name="Points" NumberOfComponents="3" format="appended" RangeMin="0"                    RangeMax="1.0198334213e+33"     offset="40"                  />
       </Points>
       <Cells>
-        <DataArray type="Int64" Name="connectivity" format="appended" RangeMin=""                     RangeMax=""                     offset="144"                 />
-        <DataArray type="Int64" Name="offsets" format="appended" RangeMin=""                     RangeMax=""                     offset="220"                 />
-        <DataArray type="UInt8" Name="types" format="appended" RangeMin=""                     RangeMax=""                     offset="272"                 />
+        <DataArray type="Int64" Name="connectivity" format="appended" RangeMin=""                     RangeMax=""                     offset="124"                 />
+        <DataArray type="Int64" Name="offsets" format="appended" RangeMin=""                     RangeMax=""                     offset="200"                 />
+        <DataArray type="UInt8" Name="types" format="appended" RangeMin=""                     RangeMax=""                     offset="252"                 />
       </Cells>
     </Piece>
   </UnstructuredGrid>
   <AppendedData encoding="base64">
-   _AQAAAACAAADwAAAAHgAAAA==eJxjYICADbNfrudmYmCIYfBgSGQoYhiuAADpTQRoAQAAAACAAAB4AAAAKgAAAA==eJxzZrBiiGEIZShmSGVABQqOqGx0PggscEAVg/FBNLJ6ZHEIGwAOAAmNAQAAAACAAACAAAAAJwAAAA==eJxjZIAAVijNCaU50GiYODuUZkHTxwSl2dDUc6KJM6OZAwAaQABjAQAAAACAAAAgAAAAEwAAAA==eJxjYYAADijNA6UFoDQAAqAAKQ==AQAAAACAAAAEAAAADAAAAA==eJzj5OTkBAAAXgAl
+   _AQAAAACAAADwAAAADAAAAA==eJxjYBhZAAAA8AABAQAAAACAAAB4AAAAKwAAAA==eJxLLsnMz1PwLNOo0lRgQAEKjqhsdD4ILHBAFYPxQTSyemRxCBsA6IULbg==AQAAAACAAACAAAAAJwAAAA==eJxjZIAAVijNCaU50GiYODuUZkHTxwSl2dDUc6KJM6OZAwAaQABjAQAAAACAAAAgAAAAEwAAAA==eJxjYYAADijNA6UFoDQAAqAAKQ==AQAAAACAAAAEAAAADAAAAA==eJzj5OTkBAAAXgAl
   </AppendedData>
 </VTKFile>

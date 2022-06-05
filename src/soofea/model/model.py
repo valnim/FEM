@@ -205,7 +205,7 @@ class NodeContainer(NumberedObject):
         if configuration == 'undeformed':
             for node_number in range(N):
                 columns[node_number] = self.node_list[node_number].undeformed_coordinates
-        elif(configuration == 'spatial'):
+        elif configuration == 'spatial':
             for node_number in range(N):
                 columns[node_number] = self.node_list[node_number].spatial_coordinates
         else:
