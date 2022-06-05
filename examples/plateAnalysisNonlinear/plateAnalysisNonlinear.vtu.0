@@ -1,23 +1,23 @@
 <?xml version="1.0"?>
 <VTKFile type="UnstructuredGrid" version="0.1" byte_order="LittleEndian" header_type="UInt32" compressor="vtkZLibDataCompressor">
   <UnstructuredGrid>
-    <Piece NumberOfPoints="10"                   NumberOfCells="4"                   >
+    <Piece NumberOfPoints="122"                  NumberOfCells="100"                 >
       <PointData Vectors="displacement">
         <DataArray type="Float64" Name="displacement" NumberOfComponents="3" format="appended" RangeMin="0"                    RangeMax="0"                    offset="0"                   />
       </PointData>
       <CellData>
       </CellData>
       <Points>
-        <DataArray type="Float32" Name="Points" NumberOfComponents="3" format="appended" RangeMin="0"                    RangeMax="1.0198334213e+33"     offset="40"                  />
+        <DataArray type="Float32" Name="Points" NumberOfComponents="3" format="appended" RangeMin="0"                    RangeMax="14.142135624"         offset="84"                  />
       </Points>
       <Cells>
-        <DataArray type="Int64" Name="connectivity" format="appended" RangeMin=""                     RangeMax=""                     offset="124"                 />
-        <DataArray type="Int64" Name="offsets" format="appended" RangeMin=""                     RangeMax=""                     offset="200"                 />
-        <DataArray type="UInt8" Name="types" format="appended" RangeMin=""                     RangeMax=""                     offset="252"                 />
+        <DataArray type="Int64" Name="connectivity" format="appended" RangeMin=""                     RangeMax=""                     offset="452"                 />
+        <DataArray type="Int64" Name="offsets" format="appended" RangeMin=""                     RangeMax=""                     offset="1124"                />
+        <DataArray type="UInt8" Name="types" format="appended" RangeMin=""                     RangeMax=""                     offset="1412"                />
       </Cells>
     </Piece>
   </UnstructuredGrid>
   <AppendedData encoding="base64">
-   _AQAAAACAAADwAAAADAAAAA==eJxjYBhZAAAA8AABAQAAAACAAAB4AAAAKwAAAA==eJxLLsnMz1PwLNOo0lRgQAEKjqhsdD4ILHBAFYPxQTSyemRxCBsA6IULbg==AQAAAACAAACAAAAAJwAAAA==eJxjZIAAVijNCaU50GiYODuUZkHTxwSl2dDUc6KJM6OZAwAaQABjAQAAAACAAAAgAAAAEwAAAA==eJxjYYAADijNA6UFoDQAAqAAKQ==AQAAAACAAAAEAAAADAAAAA==eJzj5OTkBAAAXgAl
+   _AQAAAACAAABwCwAALAAAAA==eJwzOLlKiZWJgcHB6YgyiDaA8kfBKBgFo2AUjIJRMApGwSgYBZQDAGp0BQk=AQAAAACAAAC4BQAAAQEAAA==eJx11NGNAjEMQEGXkBLo5HyduRSX4lJSyiknBQYk9oe3EqvZGOSIb9fj970/789VPzyQJF1000NvOnDWh3m9fz9fnXTRTQ+96eudvt7yvPR57vbQTReddOT73B5fzun5nYvzco7O17n7e9y5nU/7fud00kU3PfSmg3Mtzvv8fyTvk7xn8v7JuZLzJnPIl3V6MedrJVZiJVZiJVZiJVZiFVZhFVZhFVZhFVZhFVZjNVZjNVZjNVZjNVZjDdZgDdZgDdZgDdZgDdbG2lgba2NtrI21sTbWxgr2RrA3gr0R7I1gbwR7I9gbwd6Ij71xrYW1sBbWwlpYC2thraf1B55ciE0=AQAAAACAAACADAAA5gEAAA==eJxd0EVXEAAABGG7u7sLJKQFBKUb6Q4REKRLgX/vwZnL7uV7b4578sT/ncUC/BDaC/F9aP+I70J7Eb4N7cX4JrSX4OvQXoqvQvsnfBnay/BFaH+OZ9DfzmE5FoT2CiwM7ZX4MbRXYVFor8bi0F6DJaH9M5aG9lr8FNrrsCy0P0N/9LfzWI/lof0LVoT2BqwM7Y1YFdq/YnVo/4Y1ob0JP4f2ZqwN7S1YF9qfoj/62wVsxfrQ3oZfQns7NoT2DmwM7Z34NbR34bfQ3o1Nob0Hm0N7L7aE9ifoj/52EfuwNbT3Y1to/47toX0AO0L7IHaG9iHsCu3D2B3aR7AntI9ib2h/jP7ob5dwDPtC+zj2h/YJ/B7aJ3EgtE/hYGifxqHQPoPDoX0WR0L7HI6G9kfoj/52GedxLLT/wPHQvoATof0nTob2RZwK7Us4HdqXcSa0/8LZ0L6Cc6H9Ifqjv13BVZwP7b/xR2hfw4XQvo4/Q/sGLob2TVwK7Vu4HNq38Vdo38GV0P4A/dHfruIurob2Pfwd2vdxLbQf4Hpo/4Mbof0vbob2Q9wK7Ue4HdqPcSe030d/9LdTeA13Q/t13AvtN3A/tN/Eg9B+C/+E9tv4N7TfwcPQfhePQvs9PA7tp9Ef/wHI8GzjAQAAAACAAAAgAwAAxgAAAA==eJwtxRF0QgEAAMB6LwiCIAiCIAiCIPgQBEEQBEEQBEEQBEEQBEEQBINBEARBEARBMBgEQRAMBoNBEARBEATdyUVCb1HHHHfCSaecdsZZ55x3wYGLLrnsiquuue6Gm2657Y677rnvgYceeeyJp575w5+ee+GlV15746133vvL3z746JPP/vGv//zvi6+++e6Hnw6F30UcdcxxJ5x0ymlnnHXOeRccuOiSy6646prrbrjpltvuuOue+x546JHHnnjqmV/7BioOAQAAAACAAABkAAAADAAAAA==eJzj5KQ9AACx7gOF
   </AppendedData>
 </VTKFile>

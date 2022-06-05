@@ -5,8 +5,8 @@ h = 10;
 
 cl = 1;   // default mesh size at nodes -> not needed here
 
-numel_x = 2; // number of elements in x-direction
-numel_y = 2; // number of elements in y-direction
+numel_x = 10; // number of elements in x-direction
+numel_y = 10; // number of elements in y-direction
 
 Point(1) = {0, 0, 0, cl}; // bottom left
 Point(2) = {b, 0, 0, cl}; // bottom right

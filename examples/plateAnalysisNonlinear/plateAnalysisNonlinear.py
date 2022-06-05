@@ -79,4 +79,4 @@ def read():
 
     analysis = NonlinearAnalysis(model, convergence_criterion, max_iterations)
 
-    return (model, analysis)
+    return model, analysis
