@@ -51,10 +51,6 @@ def read():
     model.getType(2).height = 1.0
     model.getType(2).implementation = NonlinearFaceImpl()
 
-    #    model.addType(EdgeType(2,1, [3]))
-    #    model.getType(2).height = 1.0;
-    #    model.getType(2).implementation = None
-
     model.addMaterial(HyperelasticStVenantKirchhoffMaterial(1, 2.1e5, 0.3, 'plane_strain'))
 
     input_handler.readMesh(model)
