@@ -15,6 +15,7 @@
       <sourceFolder url="file://$MODULE_DIR$/examples/plateDOF" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/examples/plateQuads" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/examples/plateAnalysisNonlinear" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/examples/platePressure" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/ue/soofeam_start/src" />
     </content>
     <orderEntry type="jdk" jdkName="Python 3.9 (fem)" jdkType="Python SDK" />

@@ -185,3 +185,23 @@ class NonlinearAnalysis(Analysis):
                 global_index = (node.number - 1) * self._model.dimension + coord_index
                 node.dof.addIncrement(coord_index, solution_vector[global_index])
                 node.updateCoordinates()
+
+    def assembleStiffness(self, global_stiffness):
+        print('\--> Assemble global stiffness')
+        for element in self._model._element_dict.values():
+            K_elem = element.type.implementation.calcStiffness(element)
+            self.stiffnessAssembler(element, K_elem, global_stiffness)
+        for boundary in self._model._boundary_dict.values():
+            for face in boundary.component_list:
+                K_face = face.type.implementation.calcStiffness(face)
+                self.stiffnessAssembler(face, K_face, global_stiffness)
+
+    def assembleLoad(self, global_load):
+        print('\--> Assemble global load')
+        for boundary in self._model._boundary_dict.values():
+            for face in boundary.component_list:
+                F_face = face.type.implementation.calcLoad(face)
+                self.loadAssembler(face, F_face, global_load)
+        for element in self._model._element_dict.values():
+            F_int = element.type.implementation.calcLoad(element)
+            self.loadAssembler(element, F_int, global_load)

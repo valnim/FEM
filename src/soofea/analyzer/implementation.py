@@ -8,7 +8,7 @@ Created on Mon Jun 16 16:34:11 2014
 import numpy as np
 from soofea.numeric.num_int import methodIntegrate
 # from soofea.numeric import kronecker
-from soofea.analyzer.jacobian import ElementJacobian
+from soofea.analyzer.jacobian import ElementJacobian, BoundaryJacobian
 
 
 class ElementImpl(object):
@@ -81,7 +81,7 @@ class LinearElementImpl(ElementImpl):
         return np.reshape(F, (n_dofs, 1), 'F')
 
 
-class FaceImpl(object):
+class LinearFaceImpl(object):
     def calcSurfaceLoad(self, face):
         F = methodIntegrate(self.surfaceLoadIntegrator, face, face.int_points)
         return F
@@ -112,6 +112,84 @@ class FaceImpl(object):
 
         return np.reshape(F, (n_dofs, 1), 'F')
 
+
+class NonlinearFaceImpl(object):
+    def calcStiffness(self, face):
+        A_p = methodIntegrate(self._pressureStiffnessIntegrator, face, face.int_points)
+        A = A_p
+        return A
+
+    def calcLoad(self, face):
+        F_p = methodIntegrate(self._pressureForcesIntegrator, face, face.int_points)
+        F = -F_p
+        return F
+
+    def _pressureStiffnessIntegrator(self, int_point, face, parameters=None):
+        dim = face.node_list[0].getDimension()
+        n_nodes = len(face.node_number_list)
+        dofs_per_face = dim * n_nodes
+
+        p, N, dN, levi, a, b = self.calcstuff(face, int_point)
+
+        if dim == 2:
+            dN[:, 3] = np.zeros((len(dN), 1))
+
+        delta = np.eye(dim)
+
+        A_p = np.zeros((3, n_nodes, 3, n_nodes))
+        for i in range(3):
+            for j in range(n_nodes):
+                for k in range(3):
+                    for l in range(n_nodes):
+                        for m in range(3):
+                            for n in range(3):
+                                A_p[i, j, k, l] += p * N[j] * levi[i, m, n] * (dN[l, 1] * b[n] * delta[k, m] +
+                                                                               dN[l, 2] * a[m] * delta[k, n])
+        A_p = A_p[0: dim, :, 0: dim, :]
+        return np.reshape(A_p, (dofs_per_face, dofs_per_face), 'F')
+
+    def _pressureForcesIntegrator(self, int_point, face):
+        dim = face.node_list[0].getDimension()
+        n_nodes = len(face.node_number_list)
+        dofs_per_face = dim * n_nodes
+
+        p, N, _, levi, a, b = self.calcstuff(face, int_point)
+
+        F_p = np.zeros((3, dofs_per_face))
+        for i in range(3):
+            for j in range(n_nodes):
+                for k in range(3):
+                    for l in range(3):
+                        F_p[i, j] += p * N[j] * levi[i, k, l] * a[k] * b[l]
+        F_p = F_p[0: dim, :]
+        return np.reshape(F_p, (dofs_per_face, 1), 'F')
+
+    def calcstuff(self, face, int_point):
+        jac = BoundaryJacobian(face, int_point, 'spatial')
+
+        levi = self.makeLeviCvita()
+
+        a = jac.a
+        b = jac.b
+
+        N = face.type.shape.getArray(int_point.getNaturalCoordinates())
+        dN = face.type.shape.getDerivativeArray(int_point.getNaturalCoordinates())
+
+        p = int_point.pressure
+
+        return p, N, dN, levi, a, b
+
+    def makeLeviCvita(self):
+        levi = np.zeros((3, 3, 3))
+
+        for i in range(3):
+            for j in range(3):
+                for k in range(3):
+                    if i == 1 and j == 2 and k == 3 or i == 2 and j == 3 and k == 1 or i == 3 and j == 1 and k == 2:
+                        levi[i, j, k] = 1
+                    elif i == 1 and j == 3 and k == 2 or i == 2 and j == 1 and k == 3 or i == 3 and j == 2 and k == 1:
+                        levi[i, j, k] = -1
+        return levi
 
 class NonlinearElementImpl(ElementImpl):
     def calcStiffness(self, element):

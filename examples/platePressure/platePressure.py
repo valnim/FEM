@@ -16,34 +16,18 @@ class MyBCHandler(BCHandler):
 
         bottom_boundary = 1
         top_boundary = 3
+        pressure = 3e4 / (len(self._model.time_bar) - 1)
 
         for node in self._model.getBoundary(bottom_boundary).node_list:
             node.setBCIncrement(x=0.0, y=0.0)
 
-        top_y_value = 10 / (len(self._model.time_bar) - 1)
-
-        for node in self._model.getBoundary(top_boundary).node_list:
-            node.setBCIncrement(y=top_y_value)
-
-
-        #        for node in (set(self._model.getBoundary(2).node_list)): # & set(self._model.getBoundary(4).node_list)):
-        #            node.setBCDOF(x=0.0)
-        #
-        # self._model.getNode(1).setBCDOF(x=0.0)
-
-        # for node in self._model.getBoundary(1).node_list:
-        # node.setBCDOF(y=0.0)
-
-        # for node in self._model.getBoundary(2).node_list:
-        # node.setBCDOF(y=displacement)
-
-
-        # for node in self._model.getBoundary(3).node_list:
-        #     node.setBCDOF(x=0, y=displacement)
+        for face in self._model.getBoundary(top_boundary).component_list:  # Neumann Top
+            for int_point in face.int_points:
+                int_point.setPressure(pressure)
 
 
 def read():
-    mesh_file_name = 'plateAnalysisNonlinear.msh'
+    mesh_file_name = 'platePressure.msh'
     dimension = 2
     number_of_time_steps = 5
     total_time = 1.0
