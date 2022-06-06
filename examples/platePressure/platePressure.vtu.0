@@ -8,7 +8,7 @@
       <CellData>
       </CellData>
       <Points>
-        <DataArray type="Float32" Name="Points" NumberOfComponents="3" format="appended" RangeMin="0"                    RangeMax="14.142135624"         offset="64"                  />
+        <DataArray type="Float32" Name="Points" NumberOfComponents="3" format="appended" RangeMin="0"                    RangeMax="2.5353012005e+30"     offset="64"                  />
       </Points>
       <Cells>
         <DataArray type="Int64" Name="connectivity" format="appended" RangeMin=""                     RangeMax=""                     offset="200"                 />
@@ -18,6 +18,6 @@
     </Piece>
   </UnstructuredGrid>
   <AppendedData encoding="base64">
-   _AQAAAACAAABwAgAAHQAAAA==eJxjYICACZcY7x9jBNLX3O6C6FEwCmgBACFVBlo=AQAAAACAAAA4AQAAUwAAAA==eJxdjtENgDAIBfkwzuEoz7joG9ER2mrQgyaEK7k+ukfENuuKfo6zcr8/Xf/M4FvVTW+xwemtnplWzede5nLfl6/KBudbwzEcq/0HbPDrDDolHHg=AQAAAACAAAAAAgAAXwAAAA==eJxdjrcRwDAQw5xzUpb3X9SF+Q3Y4A4N2Db/RtGJD2jeizdoPogXaP4UB3QnMaLn4BN6Hj6jF+AP/LDuLBb0InxFL8G/6GX4HT+s24kLegV+Ra/Cb+i98D1+fPdNA/s=AQAAAACAAACAAAAAMwAAAA==eJxjYYAADijNA6UFoLQIlJaA0jJQWgFKq0BpDSitA6UNoLQJlLaA0jZQ2gFKAwBmgAIhAQAAAACAAAAQAAAACwAAAA==eJzj5EQFAATYAJE=
+   _AQAAAACAAABwAgAAHAAAAA==eJwr2BRVcIeRgeEDlDZYBqFHwSigBQAAi58IkA==AQAAAACAAAA4AQAAVAAAAA==eJxdjsENwDAIxG6UjEI/kbpOJroRO0KVVrSGfDDIOZDWKWlN9TeOyr1/avwzg6+obnqbDU5v18x01HzuZS73fflR2eD8aziG42j3gA1+nRubnx2eAQAAAACAAAAAAgAAXwAAAA==eJxdjrcRwDAQw5xzUpb3X9SF+Q3Y4A4N2Db/RtGJD2jeizdoPogXaP4UB3QnMaLn4BN6Hj6jF+AP/LDuLBb0InxFL8G/6GX4HT+s24kLegV+Ra/Cb+i98D1+fPdNA/s=AQAAAACAAACAAAAAMwAAAA==eJxjYYAADijNA6UFoLQIlJaA0jJQWgFKq0BpDSitA6UNoLQJlLaA0jZQ2gFKAwBmgAIhAQAAAACAAAAQAAAACwAAAA==eJzj5EQFAATYAJE=
   </AppendedData>
 </VTKFile>

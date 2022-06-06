@@ -124,7 +124,7 @@ class NonlinearFaceImpl(object):
         F = -F_p
         return F
 
-    def _pressureStiffnessIntegrator(self, int_point, face, parameters=None):
+    def _pressureStiffnessIntegrator(self, face, int_point, parameters=None):
         dim = face.node_list[0].getDimension()
         n_nodes = len(face.node_number_list)
         dofs_per_face = dim * n_nodes
@@ -132,34 +132,33 @@ class NonlinearFaceImpl(object):
         p, N, dN, levi, a, b = self.calcstuff(face, int_point)
 
         if dim == 2:
-            dN[:, 3] = np.zeros((len(dN), 1))
+            dN = np.hstack((dN, np.zeros((len(dN), 1))))
 
         delta = np.eye(dim)
 
         A_p = np.zeros((3, n_nodes, 3, n_nodes))
-        for i in range(3):
+        for i in range(2):
             for j in range(n_nodes):
-                for k in range(3):
+                for k in range(2):
                     for l in range(n_nodes):
-                        for m in range(3):
-                            for n in range(3):
-                                A_p[i, j, k, l] += p * N[j] * levi[i, m, n] * (dN[l, 1] * b[n] * delta[k, m] +
-                                                                               dN[l, 2] * a[m] * delta[k, n])
+                        for m in range(2):
+                            for n in range(2):
+                                A_p[i, j, k, l] += p * N[j] * levi[i, m, n] * (dN[l, 0] * b[n] * delta[k, m] + dN[l, 1] * a[m] * delta[k, n])
         A_p = A_p[0: dim, :, 0: dim, :]
         return np.reshape(A_p, (dofs_per_face, dofs_per_face), 'F')
 
-    def _pressureForcesIntegrator(self, int_point, face):
+    def _pressureForcesIntegrator(self, face, int_point, parameters=None):
         dim = face.node_list[0].getDimension()
         n_nodes = len(face.node_number_list)
         dofs_per_face = dim * n_nodes
 
         p, N, _, levi, a, b = self.calcstuff(face, int_point)
 
-        F_p = np.zeros((3, dofs_per_face))
-        for i in range(3):
+        F_p = np.zeros((3, n_nodes))
+        for i in range(2):
             for j in range(n_nodes):
-                for k in range(3):
-                    for l in range(3):
+                for k in range(2):
+                    for l in range(2):
                         F_p[i, j] += p * N[j] * levi[i, k, l] * a[k] * b[l]
         F_p = F_p[0: dim, :]
         return np.reshape(F_p, (dofs_per_face, 1), 'F')
@@ -182,9 +181,9 @@ class NonlinearFaceImpl(object):
     def makeLeviCvita(self):
         levi = np.zeros((3, 3, 3))
 
-        for i in range(3):
-            for j in range(3):
-                for k in range(3):
+        for i in range(2):
+            for j in range(2):
+                for k in range(2):
                     if i == 1 and j == 2 and k == 3 or i == 2 and j == 3 and k == 1 or i == 3 and j == 1 and k == 2:
                         levi[i, j, k] = 1
                     elif i == 1 and j == 3 and k == 2 or i == 2 and j == 1 and k == 3 or i == 3 and j == 2 and k == 1:

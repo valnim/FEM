@@ -58,18 +58,18 @@ class BoundaryJacobian(Jacobian):
         Jacobian.__init__(self, boundary, int_point, configuration)
         self.a = None
         self.b = None
-        self.calcTangentVectors(self)
+        self.calcTangentVectors()
 
     def calcTangentVectors(self):
-        J = np.linalg.inv(self._J) # TODO check if this is correct
-        dimJ = len(J)
+        J = self._J # TODO check if this is correct
+        dimJ = min(J.shape)
 
         if dimJ == 2:
             self.a = J[:, 0]
             self.b = J[:, 1]
         elif dimJ == 1:
             self.a = np.zeros((3, 1))
-            self.a[0:1, 0] = J[:, 0]
+            self.a[0:2, 0] = J[:, 0]
             self.b = np.zeros((3, 1))
             self.b[2, 0] = 1
         else:
