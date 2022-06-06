@@ -151,7 +151,7 @@ class NonlinearAnalysis(Analysis):
         for time_stamp in self._model.time_bar[1:]:
             print(f"\ntime step: {time_stamp.index}; t = {time_stamp.time}")
             self._model.bc_handler.resetBC()
-            self._model.bc_handler.integrateBC(time_stamp.index)
+            self._model.bc_handler.integrateBC(time_stamp)
 
             reference_inc = 0.0
             reference_res = 0.0

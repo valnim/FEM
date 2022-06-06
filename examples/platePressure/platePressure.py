@@ -16,7 +16,7 @@ class MyBCHandler(BCHandler):
 
         bottom_boundary = 1
         top_boundary = 3
-        pressure = 3e4 / (len(self._model.time_bar) - 1)
+        pressure = 3e4 * time_stamp.time / self._model.time_bar[-1].time
 
         for node in self._model.getBoundary(bottom_boundary).node_list:
             node.setBCIncrement(x=0.0, y=0.0)
