@@ -106,8 +106,8 @@ class NeoHookeanMaterial(Material):
             for j in range(dimension):
                 for k in range(dimension):
                     for l in range(dimension):
-                        C_el[i, j, k, l] = lam * np.linalg.inv(C)[i, j] * np.linalg.inv(C)[k, l] + \
-                                           2 * (mu - lam * np.sqrt(np.log(iii_c))) * IIII[i, j , k, l]
+                        C_el[i, j, k, l] = (lam * np.linalg.inv(C)[i, j] * np.linalg.inv(C)[k, l] +
+                                            2 * (mu - lam * np.log(np.sqrt(iii_c))) * IIII[i, j, k, l])
         return C_el
 
     def getSecondPK(self, E_green):
