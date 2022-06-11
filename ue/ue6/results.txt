@@ -6,5 +6,3 @@ as the deformations are generally in normal direction.
 2) Pressure Value
 Increasing the pressure results in a less uniform deformation across the pressure boundary.
 Reducing the pressure results in a very uniform deformation mostly normal to the boundary edge.
-
-3)
