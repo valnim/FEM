@@ -4,7 +4,7 @@ from soofea.io.input_handler import GmshInputHandler
 from soofea.model.type import ElementType, EdgeType
 from soofea.model import Model
 from soofea.model.material import StVenantKirchhoffMaterial
-from soofea.analyzer.implementation import LinearElementImpl, FaceImpl
+from soofea.analyzer.implementation import LinearElementImpl, LinearFaceImpl
 from soofea.analyzer.analysis import LinearAnalysis
 from soofea.model.bc_handler import BCHandler
 
@@ -44,7 +44,7 @@ def read():
 
     model.addType(ElementType(3, 1, 'quad', [2, 2]))
     model.getType(3).height = 1.0
-    model.getType(3).implementation = FaceImpl()
+    model.getType(3).implementation = LinearFaceImpl()
 
     model.addMaterial(StVenantKirchhoffMaterial(1, 2.1e5, 0.3))
     #laut Angabe E-Modul 2.1e6 hier mit e5 gerechnet weil wsl Stahl gmeint

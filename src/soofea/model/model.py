@@ -31,9 +31,9 @@ class IntegrationPoint(object):
     def __init__(self, math_ip, coordinates):
         self.math_ip = math_ip
         self._coordinates = coordinates
-        self.surface_load = None
-        self.volume_load = None
-        self.pressure = None
+        self.surface_load = 0
+        self.volume_load = 0
+        self.pressure = 0
 
     def setSurfaceLoad(self, surface_load):
         self.surface_load = surface_load(*tuple(self._coordinates.reshape(1, -1)[0]))
