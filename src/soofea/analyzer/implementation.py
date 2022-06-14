@@ -54,7 +54,7 @@ class LinearElementImpl(ElementImpl):
         F = methodIntegrate(self.volumeLoadIntegrator, element, element.int_points)
         return F
 
-    def volumeLoadIntegrator(self, int_point, element, parameters=None):
+    def volumeLoadIntegrator(self, element, int_point, parameters=None):
         dim = element.node_list[0].getDimension()
         n_nodes = len(element.node_number_list)
         n_dofs = dim * n_nodes
